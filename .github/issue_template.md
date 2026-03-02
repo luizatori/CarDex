@@ -1,8 +1,8 @@
----
-nome: Nova Issue
-sobre: Use este modelo para criar uma nova issue do projeto
-tipo: "[TIPO] - "
-----
+name:  Nova Issue - PI Sistemas Móveis
+description: Registrar nova tarefa, melhoria ou problema do aplicativo
+title: "[TIPO] - "
+labels: []
+assignees: []
 
 ##  Descrição
 
