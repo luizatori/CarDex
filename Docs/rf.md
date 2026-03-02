@@ -66,7 +66,9 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 
 ## 3. Critérios de Aceitação
 
+
 Cada requisito deve:
 - Ser testável;
 - Possuir comportamento claramente definido;
-- Estar alinhado às regras de negócio do projeto.
+- Estar alinhado às regras de negócio do projeto;
+- Alinhamento com as normas definidas.
