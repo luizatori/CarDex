@@ -34,4 +34,4 @@ Suprir a falta de aplicações com essa proposta no mercado, oferecendo uma plat
 
 ## Empresa
 
-Comunidade.
+Dedicada a Comunidade.
