@@ -6,10 +6,10 @@
 - Gustavo Henrique Fileni
   
 ## Estrutura do Repositório
-- /.github - Templates de Issues e PRs
-- /docs – documentos e diagramas
-- /src – código
-- /design – protótipos
+- /.github - Templates de Issues e PRs;
+- /docs – regras de negocio e requisitos;
+- /src – código;
+- /design – protótipos;
 
 ## Objetivo do Aplicativo
 
