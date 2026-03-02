@@ -5,7 +5,6 @@
 - Luiza Pincitori Souza de Filippi Costa 
 - Gustavo Henrique Fileni
   
-Repositório do Projeto Integrado do primeiro semestre de 2026.
 ## Estrutura do Repositório
 - /.github - Templates de Issues e PRs
 - /docs – documentos e diagramas
