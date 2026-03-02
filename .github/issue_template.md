@@ -4,7 +4,6 @@
 ##  Descrição
 
 Descreva claramente o que precisa ser feito ou qual problema foi identificado.
-
 Exemplo:
 - Implementar RF03 – Reconhecimento de Veículos por IA
 - Corrigir erro na censura automática de placas
