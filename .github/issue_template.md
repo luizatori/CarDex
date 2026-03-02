@@ -1,10 +1,8 @@
 ---
-name: Nova Issue
-about: Use este modelo para criar uma nova issue do projeto
-title: "[TIPO] - "
-labels: ""
-assignees: ""
----
+nome: Nova Issue
+sobre: Use este modelo para criar uma nova issue do projeto
+tipo: "[TIPO] - "
+----
 
 ##  Descrição
 
