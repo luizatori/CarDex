@@ -1,5 +1,10 @@
 # Desenvolvimento de Sistemas Móveis - PI
+---
 
+## Equipe 10 
+- Luiza Pincitori Souza de Filippi Costa 
+- Gustavo Henrique Fileni
+  
 ---
 
 Repositório do Projeto Integrado do primeiro semestre de 2026.
