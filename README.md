@@ -7,7 +7,7 @@
   
 ## Estrutura do Repositório
 - /.github - Templates de Issues e PRs;
-- /docs – regras de negocio e requisitos;
+- /docs – Requisitos;
 - /src – código;
 - /design – protótipos;
 
