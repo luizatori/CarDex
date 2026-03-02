@@ -6,6 +6,11 @@
 - Gustavo Henrique Fileni
   
 Repositório do Projeto Integrado do primeiro semestre de 2026.
+## Estrutura do Repositório
+- /.github - Templates de Issues e PRs
+- /docs – documentos e diagramas
+- /src – código
+- /design – protótipos
 
 ## Objetivo do Aplicativo
 
