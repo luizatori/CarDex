@@ -46,7 +46,7 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 ---
 
 ### RF06 – Personalização da Coleção
-**Descrição:** O usuário deve poder adicionar nome, descrição e stickers aos veículos colecionados.  
+**Descrição:** O usuário deve poder adicionar nome, descrição, personalizar card e adicionar stickers aos veículos colecionados.  
 **Prioridade:** Média  
 
 ---
