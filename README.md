@@ -9,8 +9,20 @@
 ## Estrutura do Repositório
 - /.github - Templates de Issues e PRs;
 - /docs – Requisitos;
-- /src – código;
+- /lib/src – código;
 - /design – protótipos;
+- /assets - imagens utilizadas;
+
+Arquivos obrigatórios na raiz da aplicação Flutter
+- /.gitignore;
+- /.metadata;
+- /analysis_options.yaml;
+- /pubspec.lock;
+- /pubspec.yaml;
+
+Pastas Alheias do Flutter
+- /android;
+- /web;
 
 ## Objetivo do Aplicativo
 
