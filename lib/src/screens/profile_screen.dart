@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/vaporwave_background.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,6 +33,7 @@ class ProfileWidgetItem {
 class _ProfileScreenState extends State<ProfileScreen> {
   String profileName = "Colecionador";
   String customText = "Bem-vindo ao meu perfil!";
+  int totalCars = 0;
 
   List<ProfileWidgetItem> widgets = [
     ProfileWidgetItem(id: "w1", type: WidgetType.totalCars, visible: true),
@@ -41,8 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ProfileWidgetItem(id: "w5", type: WidgetType.memberSince, visible: true),
     ProfileWidgetItem(id: "w6", type: WidgetType.customText, visible: true),
   ];
-
-  int totalCars = 0;
 
   int get level => (totalCars ~/ 5) + 1;
 
@@ -54,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> loadProfile() async {
     final prefs = await SharedPreferences.getInstance();
-
     setState(() {
       profileName = prefs.getString("profileName") ?? "Colecionador";
       customText = prefs.getString("customText") ?? "Bem-vindo ao meu perfil!";
@@ -63,10 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> saveProfile(String name, String text) async {
     final prefs = await SharedPreferences.getInstance();
-
     await prefs.setString("profileName", name);
     await prefs.setString("customText", text);
-
     setState(() {
       profileName = name;
       customText = text;
@@ -94,32 +91,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-
                     const Text(
                       "Personalizar Perfil",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-
                     const SizedBox(height: 20),
-
                     TextField(
                       controller: nameController,
                       maxLength: 20,
                       decoration: const InputDecoration(labelText: "Nome"),
                     ),
-
                     TextField(
                       controller: textController,
                       maxLength: 120,
-                      decoration:
-                          const InputDecoration(labelText: "Texto personalizado"),
+                      decoration: const InputDecoration(labelText: "Texto personalizado"),
                     ),
-
                     const SizedBox(height: 20),
-
-                    const Text("Widgets"),
-
+                    const Text("Ordem dos Widgets"),
                     SizedBox(
                       height: 200,
                       child: ReorderableListView(
@@ -147,20 +135,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 20),
-
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
                           widgets = editWidgets;
                         });
-
-                        saveProfile(
-                          nameController.text,
-                          textController.text,
-                        );
-
+                        saveProfile(nameController.text, textController.text);
                         Navigator.pop(context);
                       },
                       child: const Text("Salvar"),
@@ -177,96 +158,119 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String widgetLabel(WidgetType type) {
     switch (type) {
-      case WidgetType.totalCars:
-        return "Total de Carros";
-      case WidgetType.favorites:
-        return "Favoritos";
-      case WidgetType.favoriteCar:
-        return "Carro Favorito";
-      case WidgetType.level:
-        return "Nível";
-      case WidgetType.memberSince:
-        return "Membro desde";
-      case WidgetType.customText:
-        return "Texto Personalizado";
+      case WidgetType.totalCars: return "Total de Carros";
+      case WidgetType.favorites: return "Favoritos";
+      case WidgetType.favoriteCar: return "Carro Favorito";
+      case WidgetType.level: return "Nível";
+      case WidgetType.memberSince: return "Membro desde";
+      case WidgetType.customText: return "Texto Personalizado";
     }
   }
 
-  Widget renderWidget(ProfileWidgetItem w) {
+  Widget _buildHeader(bool isDark) {
+    return Column(
+      children: [
+        const CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.white24,
+          child: Icon(Icons.person, size: 50, color: Colors.white),
+        ),
+        const SizedBox(height: 15),
+        Text(
+          profileName.toUpperCase(),
+          style: TextStyle(
+            color: isDark ? Colors.white : Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        Text(
+          "NÍVEL $level  •  $totalCars CARROS",
+          style: TextStyle(
+            color: isDark ? Colors.white70 : Colors.black54,
+            fontSize: 14,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget renderWidget(ProfileWidgetItem w, bool isDark) {
     if (!w.visible) return const SizedBox();
 
+    // Estilo padrão dos cards para combinar com o Vaporwave
+    final cardTheme = Card(
+      color: isDark ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.7),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      margin: const EdgeInsets.only(bottom: 15),
+      child: _getWidgetContent(w),
+    );
+
+    return cardTheme;
+  }
+
+  Widget _getWidgetContent(ProfileWidgetItem w) {
     switch (w.type) {
       case WidgetType.totalCars:
-        return Card(
-          child: ListTile(
-            title: const Text("Total de carros"),
-            subtitle: Text("$totalCars"),
-          ),
+        return ListTile(
+          leading: const Icon(Icons.directions_car),
+          title: const Text("Total de carros"),
+          subtitle: Text("$totalCars"),
         );
-
       case WidgetType.level:
-        return Card(
-          child: ListTile(
-            title: const Text("Nível da coleção"),
-            subtitle: Text("$level"),
-          ),
+        return ListTile(
+          leading: const Icon(Icons.trending_up),
+          title: const Text("Nível da coleção"),
+          subtitle: Text("Level $level"),
         );
-
       case WidgetType.memberSince:
-        return const Card(
-          child: ListTile(
-            title: Text("Membro desde"),
-            subtitle: Text("Mar 2026"),
-          ),
+        return const ListTile(
+          leading: const Icon(Icons.calendar_today),
+          title: Text("Membro desde"),
+          subtitle: Text("Mar 2026"),
         );
-
       case WidgetType.customText:
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(customText),
-          ),
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(customText),
         );
-
-      default:
-        return const SizedBox();
+      case WidgetType.favorites:
+      case WidgetType.favoriteCar:
+        return const ListTile(
+          title: Text("Em breve"),
+          subtitle: Text("Funcionalidade em desenvolvimento"),
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final visibleWidgets = widgets.where((w) => w.visible).toList();
 
     return Scaffold(
-
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
         onPressed: openEditModal,
-        child: const Icon(Icons.settings),
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+        child: Icon(
+          Icons.settings,
+          color: isDark ? Colors.white : Colors.black,
+        ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-
-          Column(
+      body: VaporwaveBackground(
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             children: [
-              const CircleAvatar(
-                radius: 45,
-                child: Icon(Icons.person, size: 40),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                profileName,
-                style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text("Nível $level • $totalCars carros"),
+              _buildHeader(isDark),
+              const SizedBox(height: 30),
+              ...visibleWidgets.map((w) => renderWidget(w, isDark)),
             ],
           ),
-
-          const SizedBox(height: 30),
-
-          ...visibleWidgets.map(renderWidget)
-        ],
+        ),
       ),
     );
   }
