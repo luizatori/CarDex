@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'providers/theme_provider.dart';
-import 'providers/cars_provider.dart';
+import 'src/providers/theme_provider.dart';
+import 'src/providers/cars_provider.dart';
 
-import 'screens/home_screen.dart';
-import 'screens/profile_screen.dart';
+import 'src/screens/home_screen.dart';
+import 'src/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
