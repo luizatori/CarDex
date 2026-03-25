@@ -7,7 +7,7 @@ import 'src/providers/cars_provider.dart';
 import 'src/screens/home_screen.dart';
 import 'src/screens/profile_screen.dart';
 
-// MAIN APENAS INICIALIZA O APP E OS PROVIDERS 
+// MAIN APENAS INICIALIZA O APP E OS PROVIDERS -
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
   
