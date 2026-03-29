@@ -31,6 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  path_provider: ^2.1.2
+
+
+  path: ^1.9.0
+
+
   google_fonts: ^6.2.1
   cupertino_icons: ^1.0.8
 
@@ -38,6 +44,11 @@ dependencies:
 
   provider: ^6.1.0              # Gerenciar estado do app
   image_picker: ^1.0.0           # Capturar fotos da câmera
+
+  firebase_core: ^4.6.0
+  cloud_firestore: ^6.2.0
+  firebase_storage: ^13.2.0 # Para salvar as fotos dos carros
+  firebase_auth: ^6.3.0  #para o sistema de login
 
 
   # The following adds the Cupertino Icons font to your application.
