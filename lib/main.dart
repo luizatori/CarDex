@@ -6,10 +6,17 @@ import 'src/providers/cars_provider.dart';
 
 import 'src/screens/home_screen.dart';
 import 'src/screens/profile_screen.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // MAIN APENAS INICIALIZA O APP E OS PROVIDERS -
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
+
+//inicia o firebase 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   
   runApp(const MyApp());
 }

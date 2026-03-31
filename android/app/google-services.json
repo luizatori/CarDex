@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "83364911426",
-    "project_id": "car-dex-787b6",
-    "storage_bucket": "car-dex-787b6.firebasestorage.app"
+    "project_number": "116100940314",
+    "project_id": "cardexv2-a6b8c",
+    "storage_bucket": "cardexv2-a6b8c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:83364911426:android:f887147ab0a59d151a90db",
+        "mobilesdk_app_id": "1:116100940314:android:8c169257964b6ec2cbc7a3",
         "android_client_info": {
           "package_name": "com.example.app_dex_de_carros"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAwXo2BXZAlcdL36MBOu5ZkJx_WsN5fdtA"
+          "current_key": "AIzaSyAb7oqd4zthswi72PTxQife4xG65FOyhYs"
         }
       ],
       "services": {

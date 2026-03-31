@@ -43,12 +43,13 @@ dependencies:
   shared_preferences: ^2.2.3
 
   provider: ^6.1.0              # Gerenciar estado do app
-  image_picker: ^1.0.0           # Capturar fotos da câmera
+  image_picker: ^1.0.0          # Capturar fotos da câmera
+  image: ^4.1.3  
 
   firebase_core: ^4.6.0
   cloud_firestore: ^6.2.0
-  firebase_storage: ^13.2.0 # Para salvar as fotos dos carros
-  firebase_auth: ^6.3.0  #para o sistema de login
+  firebase_storage: ^13.2.0        # para salvar as fotos dos carros
+  firebase_auth: ^6.3.0            #para o sistema de login
 
 
   # The following adds the Cupertino Icons font to your application.

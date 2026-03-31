@@ -1,9 +1,12 @@
-import 'dart:io';
 import 'dart:ui';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/cars_provider.dart';
+
+
+// estado de preview expandida do carro, com detalhes e opcao de deletar
 
 class CarExpandedView extends StatefulWidget {
   final String id;
@@ -46,7 +49,6 @@ class _CarExpandedViewState extends State<CarExpandedView> {
               child: Container(color: Colors.black.withOpacity(0.85)),
             ),
           ),
-
           Center(
             child: GestureDetector(
               onPanUpdate: (details) {
@@ -96,15 +98,14 @@ class _CarExpandedViewState extends State<CarExpandedView> {
     );
   }
 
-  // MOLDURA RECONSTRUIDA COM AS PROPRIEDADES DO CAR_CARD
   Widget _buildPhysicalPolaroid(bool isDark) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.76,
       height: MediaQuery.of(context).size.height * 0.52,
-      padding: const EdgeInsets.all(12), 
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(4), 
+        borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -119,16 +120,31 @@ class _CarExpandedViewState extends State<CarExpandedView> {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(2), 
+                borderRadius: BorderRadius.circular(2),
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.file(
-                        File(widget.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      child: widget.imageUrl.isEmpty
+                          ? Container(
+                              color: Colors.black45,
+                              child: const Icon(Icons.directions_car, color: Colors.white24),
+                            )
+                          : AspectRatio(
+                              aspectRatio: 3 / 4, // AJUSTE: Força a proporção correta
+                              child: Image.memory(
+                                base64Decode(widget.imageUrl),
+                                key: ValueKey(widget.id), // AJUSTE: Mantém a imagem viva no 3D
+                                fit: BoxFit.cover,
+                                gaplessPlayback: true, // AJUSTE: Evita o "pisca" ao rotacionar
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.black45,
+                                    child: const Icon(Icons.broken_image, color: Colors.redAccent),
+                                  );
+                                },
+                              ),
+                            ),
                     ),
-                    
                     Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
@@ -148,14 +164,13 @@ class _CarExpandedViewState extends State<CarExpandedView> {
                 ),
               ),
             ),
-            
             Padding(
               padding: const EdgeInsets.only(top: 12, bottom: 4),
               child: Text(
                 widget.name.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.ibmPlexMono(
-                  fontSize: 14, 
+                  fontSize: 14,
                   letterSpacing: 1.5,
                   fontWeight: FontWeight.normal,
                   color: isDark ? Colors.white : Colors.black,
@@ -214,9 +229,9 @@ class _CarExpandedViewState extends State<CarExpandedView> {
             ),
             const SizedBox(height: 8),
             Text(
-              widget.description.isEmpty 
-                ? "NENHUMA DESCRIÇÃO FORNECIDA." 
-                : widget.description.toUpperCase(),
+              widget.description.isEmpty
+                  ? "NENHUMA DESCRIÇÃO FORNECIDA."
+                  : widget.description.toUpperCase(),
               style: GoogleFonts.ibmPlexMono(
                 fontSize: 14,
                 color: isDark ? Colors.white70 : Colors.black87,

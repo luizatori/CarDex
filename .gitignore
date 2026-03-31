@@ -59,3 +59,7 @@ pubspec.lock.bak
 # Symbolication/Obfuscation
 app.*.symbols
 app.*.map.json
+
+# Firebase chaves e configurações
+firebase.json
+.firebaserc

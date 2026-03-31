@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CarItem {
   final String id;
   String name;
@@ -5,8 +7,8 @@ class CarItem {
   String? imageUrl;
   String style;
   bool isEmpty;
-  String createdAt;
-  String updatedAt;
+  final dynamic createdAt; 
+  final dynamic updatedAt;
 
   CarItem({
     required this.id,
@@ -19,6 +21,10 @@ class CarItem {
     required this.updatedAt,
   });
 
+// helper para identificar se a imagem e base64 ou URL.
+  bool get isBase64 => imageUrl != null && imageUrl!.length > 100;
+
+  // Cria um slot vazio para a galeria (usado antes do usuário "bater a foto")
   factory CarItem.empty(String id) {
     final now = DateTime.now().toIso8601String();
 
@@ -32,7 +38,39 @@ class CarItem {
       updatedAt: now,
     );
   }
+
+  // transforma o documento do firebase no objeto CarItem.
+  // crucial para que a imagem apareça no card e na preview.
+  factory CarItem.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return CarItem(
+      id: doc.id,
+      name: data['name'] ?? "",
+      description: data['description'] ?? "",
+      imageUrl: data['imageUrl'], 
+      style: data['style'] ?? "default",
+     
+      isEmpty: false, 
+      createdAt: data['createdAt']?.toString() ?? DateTime.now().toIso8601String(),
+      updatedAt: data['updatedAt']?.toString() ?? DateTime.now().toIso8601String(),
+    );
+  }
+
+  // converte o objeto para map 
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'imageUrl': imageUrl,
+      'style': style,
+      'createdAt': createdAt,
+      'updatedAt': DateTime.now().toIso8601String(),
+    };
+  }
 }
+
+// configuração de molduras 
 
 class StyleOption {
   final String key;
@@ -57,7 +95,7 @@ class StyleOptions {
     StyleOption(
       key: "default",
       label: "Padrão",
-      color: "hsl(var(--muted))",
+      color: "#64748b", // Substituí o CSS hsl por um Hex para facilitar no Flutter
       locked: false,
       requiredCount: 0,
     ),
