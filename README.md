@@ -50,14 +50,3 @@ Suprir a falta de aplicações com essa proposta no mercado, oferecendo uma plat
 
 Dedicada a Comunidade.
 
-## Como Rodar a Aplicação
-
-### Pré-requisitos
-- Ter o SDK do Flutter instalado (versão estável).;
-- Ter um emulador (Android/iOS) ou dispositivo físico conectado;
-- VS Code com as extensões de Flutter e Dart;
-
-### Instalação de Dependências/Execução
-
-- Abra o terminal na raiz do projeto e execute: flutter pub get
-- Com o ambiente configurado, execute o comando: flutter run 
