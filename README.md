@@ -19,7 +19,6 @@ Arquivos obrigatórios na raiz da aplicação Flutter
 - /analysis_options.yaml;
 - /pubspec.lock;
 - /pubspec.yaml;
-- /firabase.json ( não é ideal estar aqui );
 
 Pastas Alheias do Flutter
 - /android;
