@@ -24,7 +24,7 @@ class CarItem {
 // helper para identificar se a imagem e base64 ou URL.
   bool get isBase64 => imageUrl != null && imageUrl!.length > 100;
 
-  // Cria um slot vazio para a galeria (usado antes do usuário "bater a foto")
+  // cria um slot vazio para a galeria 
   factory CarItem.empty(String id) {
     final now = DateTime.now().toIso8601String();
 

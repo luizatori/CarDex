@@ -39,7 +39,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
 
     return Stack(
       children: [
-        // 1. COR DE FUNDO SÓLIDA
+        // 1. COR DE FUNDO SOLIDA
         Positioned.fill(child: Container(color: bgColor)),
 
         // 2. GRID DO TETO
@@ -60,7 +60,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 3. GRID DO CHÃO (COM GLOW SUTIL)
+        // 3. GRID DO CHAO (COM GLOW SUTIL)
         Positioned(
           bottom: 0,
           left: 0,
@@ -130,7 +130,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 7. O CONTEÚDO (Logo, cards, etc)
+        // 7. O CONTEUDO (Logo, cards, etc)
         widget.child,
       ],
     );
@@ -148,7 +148,7 @@ class CRTScanlinePainter extends CustomPainter {
       ..color = color
       ..strokeWidth = 1.0;
 
-    // Desenha uma linha a cada 4 pixels
+    // desenha uma linha a cada 4 pixels
     for (double i = 0; i < size.height; i += 4) {
       canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
     }
