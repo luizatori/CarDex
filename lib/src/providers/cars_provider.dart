@@ -6,7 +6,7 @@ import '../models/car.dart';
 import 'dart:io';
 import 'dart:convert'; 
 
-
+// provider para gerenciamento de carros, inccluindo leitura de firestore
 class CarsProvider extends ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   
