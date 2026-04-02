@@ -6,11 +6,29 @@ import '../models/car.dart';
 import 'dart:io';
 import 'dart:convert'; 
 
+
 class CarsProvider extends ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   
-  // ID fixo para desenvolvimento sem login
+  // usuario teste para desenvolvimento, depois sera substituído pelo usuario autenticado
   final String _tempUid = "usuario_teste"; 
+
+  // variavel interna para armazenar os carros atuais do Stream
+  List<CarItem> _currentCars = [];
+
+  // getter para a lista de carros 
+  List<CarItem> get cars => _currentCars;
+
+  // getter para a contagem 
+  int get filledCount => _currentCars.where((c) => !c.isEmpty).length;
+
+  CarsProvider() {
+    // Escuta o stream e atualiza a lista interna sempre que o banco mudar
+    carStream.listen((updatedList) {
+      _currentCars = updatedList;
+      notifyListeners(); // avisa a UI para atualizar
+    });
+  }
 
   Stream<List<CarItem>> get carStream {
     return _db
@@ -24,10 +42,12 @@ class CarsProvider extends ChangeNotifier {
               .map((doc) => CarItem.fromFirestore(doc))
               .toList();
           
+          // mantem a logica de ter um slot vazio no final para o card de adicionar
           return [...fetchedCars, CarItem.empty("new_slot")];
         });
   }
 
+  // metodos
   Future<String> _processImage(File imageFile) async {
     final bytes = await imageFile.readAsBytes();
     img.Image? image = img.decodeImage(bytes);
@@ -40,7 +60,7 @@ class CarsProvider extends ChangeNotifier {
   }
 
   Future<void> addCarFromGallery({
-    required String name,
+    required String name, 
     required String description,
     required String style,
     required File imageFile, 
