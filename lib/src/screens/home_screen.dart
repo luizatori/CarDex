@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           opaque: false, 
           barrierColor: Colors.transparent,
           transitionDuration: const Duration(milliseconds: 500),
-          pageBuilder: (context, _, __) => CarExpandedView(
+          pageBuilder: (context, _, _) => CarExpandedView(
             id: car.id, 
             imageUrl: car.imageUrl ?? "",
             name: car.name,

@@ -46,8 +46,6 @@ class AppTheme {
       onSecondary: backgroundLight,
       error: Colors.red,
       onError: Colors.white,
-      background: backgroundLight,
-      onBackground: foregroundLight,
       surface: surfaceLight,
       onSurface: foregroundLight,
     ),

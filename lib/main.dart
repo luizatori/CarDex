@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:intl/date_symbol_data_local.dart';
 
+import 'firebase_options.dart';
 import 'src/providers/theme_provider.dart';
 import 'src/providers/cars_provider.dart';
+import 'src/providers/auth_provider.dart'; 
 
 import 'src/screens/home_screen.dart';
 import 'src/screens/profile_screen.dart';
-import 'firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'src/screens/login_screen.dart'; 
+import 'src/screens/register_screen.dart';
 
-// MAIN APENAS INICIALIZA O APP E OS PROVIDERS -
+// main so gerencia as rotas e providers e inicia o app
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
-
-//inicia o firebase 
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
+// configuracoes de data para o formato pt br 
+  await initializeDateFormatting('pt_BR', null);
+
   runApp(const MyApp());
 }
 
@@ -30,6 +37,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => CarsProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()), // Registrado
       ],
       child: const AppRoot(),
     );
@@ -45,26 +53,31 @@ class AppRoot extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       title: "Dex de carros",
-
       themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
-
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0E0E11),
       ),
-
-      initialRoute: '/',
-
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
         '/profile': (context) => const ProfileScreen(),
       },
     );

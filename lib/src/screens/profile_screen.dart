@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:intl/intl.dart'; 
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -42,6 +44,8 @@ class ProfileWidgetItem {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final String customFont = 'IBM Plex Mono';
+  
+  // valores padrao para o perfil , podem ser editados e salvos no sharedpreferences
   String profileName = "Colecionador";
   String customText = "Bem-vindo ao meu perfil!";
   String? mainFavoriteCarId;
@@ -63,53 +67,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
     loadProfile();
   }
 
+  String _userKey(String key) {
+    final user = FirebaseAuth.instance.currentUser;
+    return user != null ? "${user.uid}_$key" : key;
+  }
+
+  // funcao para buscar a data de criacao do usuario no firebase
+  String _getMemberSinceDate() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && user.metadata.creationTime != null) {
+      return DateFormat('MMM yyyy', 'pt_BR').format(user.metadata.creationTime!).toUpperCase();
+    }
+    return "MAR 2026"; //fallback
+  }
+
   Future<void> loadProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedOrder = prefs.getStringList("widgetsOrder");
-
     setState(() {
-      profileName = prefs.getString("profileName") ?? "Colecionador";
-      customText = prefs.getString("customText") ?? "Bem-vindo ao meu perfil!";
-      mainFavoriteCarId = prefs.getString("mainFavoriteCarId");
-      profileImagePath = prefs.getString("profileImage");
-      favoriteCarIds = prefs.getStringList("favoriteCarIds") ?? [];
+      profileName = "Colecionador";
+      customText = "Bem-vindo ao meu perfil!";
+      mainFavoriteCarId = null;
+      profileImagePath = null;
+      favoriteCarIds = [];
+      widgets = [
+        ProfileWidgetItem(id: "w1", type: WidgetType.totalCars, visible: true),
+        ProfileWidgetItem(id: "w2", type: WidgetType.favorites, visible: true),
+        ProfileWidgetItem(id: "w3", type: WidgetType.favoriteCar, visible: true),
+        ProfileWidgetItem(id: "w4", type: WidgetType.level, visible: true),
+        ProfileWidgetItem(id: "w5", type: WidgetType.memberSince, visible: true),
+        ProfileWidgetItem(id: "w6", type: WidgetType.customText, visible: true),
+      ];
+    });
 
-      if (savedOrder != null && savedOrder.isNotEmpty) {
-        List<ProfileWidgetItem> ordered = [];
-        for (String id in savedOrder) {
-          final isVisible = prefs.getBool("widgetVisible_$id") ?? true;
-          try {
-            int val = int.parse(id.replaceAll(RegExp(r'[^0-9]'), ''));
-            if (val > 0 && val <= WidgetType.values.length) {
-              ordered.add(ProfileWidgetItem(
-                id: id,
-                type: WidgetType.values[val - 1],
-                visible: isVisible,
-              ));
+    final prefs = await SharedPreferences.getInstance();
+    final savedOrder = prefs.getStringList(_userKey("widgetsOrder"));
+
+    if (mounted) {
+      setState(() {
+        profileName = prefs.getString(_userKey("profileName")) ?? "Colecionador";
+        customText = prefs.getString(_userKey("customText")) ?? "Bem-vindo ao meu perfil!";
+        mainFavoriteCarId = prefs.getString(_userKey("mainFavoriteCarId"));
+        profileImagePath = prefs.getString(_userKey("profileImage"));
+        favoriteCarIds = prefs.getStringList(_userKey("favoriteCarIds")) ?? [];
+
+        if (savedOrder != null && savedOrder.isNotEmpty) {
+          List<ProfileWidgetItem> ordered = [];
+          for (String id in savedOrder) {
+            final isVisible = prefs.getBool(_userKey("widgetVisible_$id")) ?? true;
+            try {
+              int val = int.parse(id.replaceAll(RegExp(r'[^0-9]'), ''));
+              if (val > 0 && val <= WidgetType.values.length) {
+                ordered.add(ProfileWidgetItem(
+                  id: id,
+                  type: WidgetType.values[val - 1],
+                  visible: isVisible,
+                ));
+              }
+            } catch (e) {
+              debugPrint("Erro ao processar widget $id: $e");
             }
-          } catch (e) {
-            debugPrint("Erro ao processar widget $id: $e");
+          }
+          if (ordered.isNotEmpty) {
+            widgets = ordered;
           }
         }
-        if (ordered.isNotEmpty) {
-          widgets = ordered;
-        }
-      }
-    });
+      });
+    }
   }
 
   Future<void> saveProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("profileName", profileName);
-    await prefs.setString("customText", customText);
-    if (mainFavoriteCarId != null) await prefs.setString("mainFavoriteCarId", mainFavoriteCarId!);
-    if (profileImagePath != null) await prefs.setString("profileImage", profileImagePath!);
-    await prefs.setStringList("favoriteCarIds", favoriteCarIds);
+    await prefs.setString(_userKey("profileName"), profileName);
+    await prefs.setString(_userKey("customText"), customText);
+    if (mainFavoriteCarId != null) await prefs.setString(_userKey("mainFavoriteCarId"), mainFavoriteCarId!);
+    if (profileImagePath != null) await prefs.setString(_userKey("profileImage"), profileImagePath!);
+    await prefs.setStringList(_userKey("favoriteCarIds"), favoriteCarIds);
 
     List<String> orderIds = widgets.map((w) => w.id).toList();
-    await prefs.setStringList("widgetsOrder", orderIds);
+    await prefs.setStringList(_userKey("widgetsOrder"), orderIds);
     for (var w in widgets) {
-      await prefs.setBool("widgetVisible_${w.id}", w.visible);
+      await prefs.setBool(_userKey("widgetVisible_${w.id}"), w.visible);
     }
   }
 
@@ -120,6 +156,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() => profileImagePath = image.path);
       saveProfileData();
     }
+  }
+
+  void _confirmLogout() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final modalBg = isDark ? const Color(0xFF121212) : Colors.white;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: modalBg,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: textColor.withOpacity(0.1))),
+        title: Text("LOGOUT", style: GoogleFonts.getFont(customFont, fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+        content: Text("Deseja mesmo sair da sua conta?", style: GoogleFonts.getFont(customFont, fontSize: 13, color: textColor.withOpacity(0.7))),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("CANCELAR", style: GoogleFonts.getFont(customFont, fontSize: 11, color: textColor.withOpacity(0.5))),
+          ),
+          TextButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              if (mounted) Navigator.pushReplacementNamed(context, '/login');
+            },
+            child: Text("SIM, SAIR", style: GoogleFonts.getFont(customFont, fontSize: 11, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
   }
 
   void _openFavoritesManager() async {
@@ -260,15 +325,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: isDark ? Colors.white60 : Colors.black54,
                 fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
         const SizedBox(height: 20),
-        OutlinedButton.icon(
-          onPressed: openEditModal,
-          icon: Icon(Icons.tune, size: 16, color: textColor),
-          label: Text("PERSONALIZAR PERFIL",
-              style: GoogleFonts.getFont(customFont, color: textColor, fontSize: 10, fontWeight: FontWeight.bold)),
-          style: OutlinedButton.styleFrom(
-              side: BorderSide(color: textColor.withOpacity(0.15)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            OutlinedButton.icon(
+              onPressed: openEditModal,
+              icon: Icon(Icons.tune, size: 16, color: textColor),
+              label: Text("PERSONALIZAR PERFIL",
+                  style: GoogleFonts.getFont(customFont, color: textColor, fontSize: 10, fontWeight: FontWeight.bold)),
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: textColor.withOpacity(0.15)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+            ),
+            const SizedBox(width: 12),
+            OutlinedButton(
+              onPressed: _confirmLogout,
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: textColor.withOpacity(0.15)),
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(10)),
+              child: Icon(Icons.logout, size: 16, color: textColor),
+            ),
+          ],
         ),
       ],
     );
@@ -397,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(width: 8),
                 Text("MEMBRO DESDE", style: headerStyle)
               ]),
-              Text("MAR 2026",
+              Text(_getMemberSinceDate(),
                   style: GoogleFonts.getFont(customFont, fontWeight: FontWeight.bold, color: textColor, fontSize: 10)),
             ]);
       default:
@@ -500,7 +579,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   trailing: Transform.scale(
                                     scale: 0.7,
                                     child: Switch(
-                                      activeColor: switchColor,
+                                      activeThumbColor: switchColor,
                                       value: w.visible,
                                       onChanged: (v) => setModalState(() => w.visible = v),
                                     ),

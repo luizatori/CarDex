@@ -5,35 +5,56 @@ import 'package:image/image.dart' as img;
 import '../models/car.dart';
 import 'dart:io';
 import 'dart:convert'; 
+import 'dart:async';
 
-// provider para gerenciamento de carros, inccluindo leitura de firestore
 class CarsProvider extends ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   
-  // usuario teste para desenvolvimento, depois sera substituído pelo usuario autenticado
-  final String _tempUid = "usuario_teste"; 
-
-  // variavel interna para armazenar os carros atuais do Stream
+  StreamSubscription<List<CarItem>>? _carSubscription;
   List<CarItem> _currentCars = [];
-
-  // getter para a lista de carros 
+  
   List<CarItem> get cars => _currentCars;
-
-  // getter para a contagem 
   int get filledCount => _currentCars.where((c) => !c.isEmpty).length;
 
+  // getter dinamico
+  String get _userId => _auth.currentUser?.uid ?? "usuario_teste";
+
   CarsProvider() {
-    // Escuta o stream e atualiza a lista interna sempre que o banco mudar
-    carStream.listen((updatedList) {
+    _listenToAuthChanges();
+  }
+
+  // escuta mudancas de autenticacao para atuzalizar stream de carros 
+  void _listenToAuthChanges() {
+    _auth.authStateChanges().listen((user) {
+      _initStream();
+    });
+  }
+
+  // inicializa ou reinicia a escuta do banco vinculada ao usuario atual
+  void _initStream() {
+
+    // cancela a inscricao anterior se existir para nao haver vazamento de memoria
+    _carSubscription?.cancel();
+
+    // se nao houver usuario e nao estivermos em modo teste, a lista e limpada
+    if (_auth.currentUser == null && _userId == "usuario_teste") {
+      _currentCars = [];
+      notifyListeners();
+    }
+
+    _carSubscription = carStream.listen((updatedList) {
       _currentCars = updatedList;
-      notifyListeners(); // avisa a UI para atualizar
+      notifyListeners();
+    }, onError: (e) {
+      debugPrint("Erro no Stream de carros: $e");
     });
   }
 
   Stream<List<CarItem>> get carStream {
     return _db
         .collection('users')
-        .doc(_tempUid) 
+        .doc(_userId) 
         .collection('cars')
         .orderBy('createdAt', descending: true)
         .snapshots()
@@ -42,21 +63,26 @@ class CarsProvider extends ChangeNotifier {
               .map((doc) => CarItem.fromFirestore(doc))
               .toList();
           
-          // mantem a logica de ter um slot vazio no final para o card de adicionar
+          // retorna a lista do banco + o slot vazio para o botao de "adicionar" na UI
           return [...fetchedCars, CarItem.empty("new_slot")];
         });
   }
 
-  // metodos
+  // processamento de imagem otimizado
   Future<String> _processImage(File imageFile) async {
-    final bytes = await imageFile.readAsBytes();
-    img.Image? image = img.decodeImage(bytes);
-    if (image == null) return "";
+    try {
+      final bytes = await imageFile.readAsBytes();
+      img.Image? image = img.decodeImage(bytes);
+      if (image == null) return "";
 
-    img.Image resized = img.copyResize(image, width: 500);
-    final compressedBytes = img.encodeJpg(resized, quality: 70);
-
-    return base64Encode(compressedBytes);
+      // redimensiona mantendo o aspecto se possivel, largura de 500px é boa para mobile
+      img.Image resized = img.copyResize(image, width: 500);
+      final compressedBytes = img.encodeJpg(resized, quality: 70);
+      return base64Encode(compressedBytes);
+    } catch (e) {
+      debugPrint("Erro ao processar imagem: $e");
+      return "";
+    }
   }
 
   Future<void> addCarFromGallery({
@@ -65,14 +91,11 @@ class CarsProvider extends ChangeNotifier {
     required String style,
     required File imageFile, 
   }) async {
-
-    debugPrint("Iniciando salvamento para o usuário: $_tempUid");
-
+    debugPrint("Salvando para o usuário: $_userId");
     try {
       final base64Image = await _processImage(imageFile);
-      debugPrint("Imagem processada com sucesso.");
-
-      await _db.collection('users').doc(_tempUid).collection('cars').add({
+      
+      await _db.collection('users').doc(_userId).collection('cars').add({
         'name': name,
         'description': description,
         'style': style,
@@ -80,20 +103,23 @@ class CarsProvider extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'isFavorite': false,
       });
-      
-      debugPrint("SUCESSO: Carro salvo no Firestore!");
-      notifyListeners();
+      // notifyListeners() nao é estritamente necessario aqui pois o stream (snapshots) ja vai detectar a mudança no firebase e atualizar a lista sozinho.
     } catch (e) {
-      debugPrint("ERRO CRÍTICO ao salvar no Firestore: $e");
+      debugPrint("Erro ao salvar: $e");
     }
   }
 
   Future<void> deleteCar(String carId) async {
     try {
-      await _db.collection('users').doc(_tempUid).collection('cars').doc(carId).delete();
-      notifyListeners();
+      await _db.collection('users').doc(_userId).collection('cars').doc(carId).delete();
     } catch (e) {
       debugPrint("Erro ao deletar: $e");
     }
+  }
+
+  @override
+  void dispose() {
+    _carSubscription?.cancel();
+    super.dispose();
   }
 }

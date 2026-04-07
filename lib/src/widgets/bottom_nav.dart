@@ -29,18 +29,13 @@ class BottomNav extends StatelessWidget {
                   color: isDark 
                       ? const Color(0xFF1E1E1E) 
                       : Colors.white.withOpacity(0.95),
-                  
                   borderRadius: BorderRadius.circular(40),
-                  
-              
-border: Border.all(
-  color: isDark 
-      ? Colors.white.withOpacity(0.2)  
-      : Colors.black.withOpacity(0.2), 
-      
-  width: 1.0, 
-),
-                  
+                  border: Border.all(
+                    color: isDark 
+                        ? Colors.white.withOpacity(0.2)  
+                        : Colors.black.withOpacity(0.2), 
+                    width: 1.0, 
+                  ),
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 25,
@@ -60,7 +55,6 @@ border: Border.all(
                         color: isDark ? Colors.white70 : Colors.black87,
                       ),
                     ),
-                    
                     Container(
                       width: 1, 
                       height: 24, 
@@ -68,13 +62,14 @@ border: Border.all(
                           ? Colors.white.withOpacity(0.1) 
                           : Colors.black.withOpacity(0.1),
                     ),
-                    
                     IconButton(
                       onPressed: () {
                         if (isProfile) {
-                          Navigator.pushReplacementNamed(context, '/');
+                          // se estamos no perfil, voltamos para a home
+                          Navigator.of(context).pop();
                         } else {
-                          Navigator.pushReplacementNamed(context, '/profile');
+                          // se estamos na home, voltamos pro perfil
+                          Navigator.pushNamed(context, '/profile');
                         }
                       },
                       icon: Icon(

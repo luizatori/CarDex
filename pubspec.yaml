@@ -50,6 +50,7 @@ dependencies:
   cloud_firestore: ^6.2.0
   firebase_storage: ^13.2.0        # para salvar as fotos dos carros
   firebase_auth: ^6.3.0            #para o sistema de login
+  intl: ^0.20.2
 
 
   # The following adds the Cupertino Icons font to your application.
