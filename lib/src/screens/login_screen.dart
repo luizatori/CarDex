@@ -20,14 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // validacao de campos vazios 
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("POR FAVOR, PREENCHA TODOS OS CAMPOS."),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      _showSnackBar("POR FAVOR, PREENCHA TODOS OS CAMPOS.", Colors.redAccent);
       return;
     }
 
@@ -35,17 +29,105 @@ class _LoginScreenState extends State<LoginScreen> {
     final error = await auth.signIn(email, password);
 
     if (error != null && mounted) {
-      // exibe possibilidades de erro de login
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toUpperCase()),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      _showSnackBar(error.toUpperCase(), Colors.redAccent);
     } else if (mounted) {
-      // forca a ida para a home
       Navigator.pushReplacementNamed(context, '/home');
     }
+  }
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  void _showForgotPasswordModal(BuildContext context) {
+    final TextEditingController resetController = TextEditingController();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setModalState) {
+          final auth = context.read<AuthProvider>();
+
+          return AlertDialog(
+            backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            title: Text(
+              "RECUPERAR SENHA",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.getFont(customFont, 
+                  fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "ENVIAREMOS UM LINK DE REDEFINIÇÃO VIA EMAILJS PARA O SEU E-MAIL.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.getFont(customFont, 
+                      fontSize: 10, color: textColor.withOpacity(0.6)),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: resetController,
+                  style: GoogleFonts.getFont(customFont, fontSize: 13, color: textColor),
+                  decoration: InputDecoration(
+                    labelText: "E-MAIL CADASTRADO",
+                    labelStyle: TextStyle(fontSize: 10, color: textColor.withOpacity(0.5)),
+                    filled: true,
+                    fillColor: textColor.withOpacity(0.05),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? Colors.white : Colors.black,
+                      foregroundColor: isDark ? Colors.black : Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: auth.isLoading ? null : () async {
+                      if (resetController.text.isEmpty) {
+                        _showSnackBar("INFORME O E-MAIL.", Colors.redAccent);
+                        return;
+                      }
+                      
+                      // aqui o authProvider deve estar configurado para disparar o emailJS
+                      final error = await auth.resetPassword(resetController.text.trim());
+                      
+                      if (error != null) {
+                        Navigator.pop(context);
+                        _showSnackBar(error.toUpperCase(), Colors.redAccent);
+                      } else {
+                        Navigator.pop(context);
+                        _showSnackBar("LINK ENVIADO COM SUCESSO!", Colors.greenAccent);
+                      }
+                    },
+                    child: auth.isLoading 
+                      ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.cyanAccent)) 
+                      : Text("ENVIAR LINK", style: GoogleFonts.getFont(customFont, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+      },
+    );
   }
 
   @override
@@ -90,16 +172,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
                         _buildTextField("SENHA", Icons.lock_outline, isDark,
                             isPassword: true, controller: _passwordController),
-                        const SizedBox(height: 24),
+                        
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () => _showForgotPasswordModal(context),
+                            child: Text(
+                              "ESQUECEU SUA SENHA?",
+                              style: GoogleFonts.getFont(customFont,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor.withOpacity(0.6),
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
                         SizedBox(
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  isDark ? Colors.white : Colors.black,
-                              foregroundColor:
-                                  isDark ? Colors.black : Colors.white,
+                              backgroundColor: isDark ? Colors.white : Colors.black,
+                              foregroundColor: isDark ? Colors.black : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                             ),
@@ -119,20 +215,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
                         Row(
                           children: [
-                            Expanded(
-                                child:
-                                    Divider(color: textColor.withOpacity(0.1))),
+                            Expanded(child: Divider(color: textColor.withOpacity(0.1))),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                               child: Text("OU",
                                   style: GoogleFonts.getFont(customFont,
                                       fontSize: 10,
                                       color: textColor.withOpacity(0.4))),
                             ),
-                            Expanded(
-                                child:
-                                    Divider(color: textColor.withOpacity(0.1))),
+                            Expanded(child: Divider(color: textColor.withOpacity(0.1))),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -140,8 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "ENTRAR COM GOOGLE", Icons.g_mobiledata, isDark),
                         const SizedBox(height: 32),
                         GestureDetector(
-                          onTap: () =>
-                              Navigator.pushNamed(context, '/register'),
+                          onTap: () => Navigator.pushNamed(context, '/register'),
                           child: Text(
                             "NÃO POSSUI UMA CONTA? CADASTRE-SE",
                             textAlign: TextAlign.center,

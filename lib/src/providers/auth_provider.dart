@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart'; 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
@@ -9,33 +11,30 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  // funcao de cadastro atualizada para salvar no firestore
+  // funcao de cadastro
   Future<String?> signUp(String email, String password, String username) async {
     _isLoading = true;
     notifyListeners();
     try {
-
-      // cria a conta no firebase auth
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email, 
         password: password
       );
 
-      // se a conta foi criada, cria o documento do usuario no firestore
       if (credential.user != null) {
         await _db.collection('users').doc(credential.user!.uid).set({
           'uid': credential.user!.uid,
           'email': email,
           'username': username,
-          'points': 0, // inicia o sistema gamificado
-          'capturedCars': [], // dex vazia no inicio
+          'points': 0,
+          'capturedCars': [],
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
 
       _isLoading = false;
       notifyListeners();
-      return null; // sucesso
+      return null;
     } on FirebaseAuthException catch (e) {
       _isLoading = false;
       notifyListeners();
@@ -56,13 +55,60 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return null;
+  } on FirebaseAuthException catch (e) {
+  _isLoading = false;
+  notifyListeners();
+  
+  if (e.code == 'user-not-found' || e.code == 'invalid-email') {
+    return 'E-MAIL INVÁLIDO OU NÃO CADASTRADO.';
+  }
+  
+  return _handleAuthError(e);
+}
+  }
+
+  // funcao de recuperação de senha integrada com emailJS
+  Future<String?> resetPassword(String email) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      // firebase envia o link oficial
+      await _auth.sendPasswordResetEmail(email: email);
+
+// chamada para a API do emailJS 
+      final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+      
+      await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Origin': 'http://localhost', 
+        },
+        body: json.encode({
+          'service_id': 'service_vtmpebg',
+          'template_id': 'template_jwlfm0n',
+          'user_id': 'ftn1tjEd5m9e9FKDb',
+          'template_params': {
+            'user_email': email,
+            'project_name': 'DEX DE CARROS',
+          },
+        }),
+      );
+
+      _isLoading = false;
+      notifyListeners();
+      return null;
     } on FirebaseAuthException catch (e) {
       _isLoading = false;
       notifyListeners();
       return _handleAuthError(e);
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      debugPrint("ERRO CRÍTICO NO PROVIDER: $e"); 
+      return 'ERRO AO PROCESSAR: $e';
     }
   }
-
   // logout 
   Future<void> signOut() async => await _auth.signOut();
 
@@ -74,6 +120,7 @@ class AuthProvider extends ChangeNotifier {
       case 'email-already-in-use': return 'E-mail já cadastrado.';
       case 'invalid-email': return 'E-mail inválido.';
       case 'weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
+      case 'network-request-failed': return 'Erro de conexão com a rede.';
       default: return 'Erro: ${e.message}';
     }
   }
