@@ -17,27 +17,22 @@ class CarsProvider extends ChangeNotifier {
   List<CarItem> get cars => _currentCars;
   int get filledCount => _currentCars.where((c) => !c.isEmpty).length;
 
-  // getter dinamico
   String get _userId => _auth.currentUser?.uid ?? "usuario_teste";
 
   CarsProvider() {
     _listenToAuthChanges();
   }
 
-  // escuta mudancas de autenticacao para atuzalizar stream de carros 
   void _listenToAuthChanges() {
     _auth.authStateChanges().listen((user) {
       _initStream();
     });
   }
 
-  // inicializa ou reinicia a escuta do banco vinculada ao usuario atual
   void _initStream() {
 
-    // cancela a inscricao anterior se existir para nao haver vazamento de memoria
     _carSubscription?.cancel();
 
-    // se nao houver usuario e nao estivermos em modo teste, a lista e limpada
     if (_auth.currentUser == null && _userId == "usuario_teste") {
       _currentCars = [];
       notifyListeners();
@@ -63,19 +58,16 @@ class CarsProvider extends ChangeNotifier {
               .map((doc) => CarItem.fromFirestore(doc))
               .toList();
           
-          // retorna a lista do banco + o slot vazio para o botao de "adicionar" na UI
           return [...fetchedCars, CarItem.empty("new_slot")];
         });
   }
 
-  // processamento de imagem otimizado
   Future<String> _processImage(File imageFile) async {
     try {
       final bytes = await imageFile.readAsBytes();
       img.Image? image = img.decodeImage(bytes);
       if (image == null) return "";
 
-      // redimensiona mantendo o aspecto se possivel, largura de 500px é boa para mobile
       img.Image resized = img.copyResize(image, width: 500);
       final compressedBytes = img.encodeJpg(resized, quality: 70);
       return base64Encode(compressedBytes);
@@ -103,7 +95,6 @@ class CarsProvider extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'isFavorite': false,
       });
-      // notifyListeners() nao é estritamente necessario aqui pois o stream (snapshots) ja vai detectar a mudança no firebase e atualizar a lista sozinho.
     } catch (e) {
       debugPrint("Erro ao salvar: $e");
     }
