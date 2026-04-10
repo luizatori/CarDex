@@ -12,7 +12,20 @@
           "package_name": "com.example.app_dex_de_carros"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "116100940314-9sntn4qprro9a90eu2epfa4hamoll4cd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_dex_de_carros",
+            "certificate_hash": "af77b397c3601d29fb24c34a554789e2e8c5239c"
+          }
+        },
+        {
+          "client_id": "116100940314-84be4nij28qto0rcpfvets27s68cnbva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAb7oqd4zthswi72PTxQife4xG65FOyhYs"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116100940314-84be4nij28qto0rcpfvets27s68cnbva.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
