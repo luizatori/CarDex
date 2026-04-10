@@ -7,6 +7,7 @@ class CarItem {
   String? imageUrl;
   String style;
   bool isEmpty;
+  bool isFavorite; 
   final dynamic createdAt; 
   final dynamic updatedAt;
 
@@ -17,30 +18,27 @@ class CarItem {
     this.imageUrl,
     required this.style,
     required this.isEmpty,
+    this.isFavorite = false, 
     required this.createdAt,
     required this.updatedAt,
   });
 
-// helper para identificar se a imagem e base64 ou URL.
   bool get isBase64 => imageUrl != null && imageUrl!.length > 100;
 
-  // cria um slot vazio para a galeria 
   factory CarItem.empty(String id) {
     final now = DateTime.now().toIso8601String();
-
     return CarItem(
       id: id,
       name: "",
       description: "",
       style: "default",
       isEmpty: true,
+      isFavorite: false,
       createdAt: now,
       updatedAt: now,
     );
   }
 
-  // transforma o documento do firebase no objeto CarItem.
-  // crucial para que a imagem apareça no card e na preview.
   factory CarItem.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     
@@ -50,27 +48,27 @@ class CarItem {
       description: data['description'] ?? "",
       imageUrl: data['imageUrl'], 
       style: data['style'] ?? "default",
-     
       isEmpty: false, 
+      isFavorite: data['isFavorite'] ?? false, 
       createdAt: data['createdAt']?.toString() ?? DateTime.now().toIso8601String(),
       updatedAt: data['updatedAt']?.toString() ?? DateTime.now().toIso8601String(),
     );
   }
 
-  // converte o objeto para map 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'description': description,
       'imageUrl': imageUrl,
       'style': style,
+      'isFavorite': isFavorite, 
       'createdAt': createdAt,
       'updatedAt': DateTime.now().toIso8601String(),
     };
   }
 }
 
-// configuração de molduras 
+// CONFIGURACAO DAS MOLDURAS 
 
 class StyleOption {
   final String key;
@@ -95,7 +93,7 @@ class StyleOptions {
     StyleOption(
       key: "default",
       label: "Padrão",
-      color: "#64748b", // Substituí o CSS hsl por um Hex para facilitar no Flutter
+      color: "#64748b", 
       locked: false,
       requiredCount: 0,
     ),

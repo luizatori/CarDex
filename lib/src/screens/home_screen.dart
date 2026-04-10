@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CarItem? selectedCar;
+  String activeFilter = "Data"; 
 
   void handleCardClick(CarItem car, int totalColecao) {
     setState(() {
@@ -30,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     if (!car.isEmpty) {
-      // 1. SE O CARD ESTA POPULADO - abre a visualização expandida
       Navigator.of(context).push(
         PageRouteBuilder(
           opaque: false, 
@@ -41,12 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
             imageUrl: car.imageUrl ?? "",
             name: car.name,
             description: car.description,
-            heroTag: 'car_hero_${car.id}', // Tag consistente com o CarCard
+            heroTag: 'car_hero_${car.id}',
           ),
         ),
       );
     } else {
-      // 2. SE O CARD ESTA VAZIO - abre o modal de criacao
       showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -89,15 +88,29 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           bottom: false, 
           child: StreamBuilder<List<CarItem>>(
-            // escuta o stream do firestore atraves do provider
             stream: context.watch<CarsProvider>().carStream, 
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator(color: Colors.cyanAccent));
               }
 
-              final cars = snapshot.data ?? [];
+              List<CarItem> cars = snapshot.data ?? [];
               final filledCount = cars.where((c) => !c.isEmpty).length;
+
+              //LOGICA DE FILTRAGEM
+              if (activeFilter == "Data") {
+       
+                cars.sort((a, b) {
+                  if (a.isEmpty || b.isEmpty) return 0;
+                  return (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
+                });
+              } else if (activeFilter == "Favoritos") {
+                cars.sort((a, b) {
+                  int aFav = (a.isFavorite ?? false) ? 0 : 1;
+                  int bFav = (b.isFavorite ?? false) ? 0 : 1;
+                  return aFav.compareTo(bFav);
+                });
+              }
 
               return Column(
                 children: [
@@ -126,10 +139,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
-                      children: const [
-                        Expanded(child: FilterDropdown(label: "Data")),
-                        SizedBox(width: 12),
-                        Expanded(child: FilterDropdown(label: "Favoritos")),
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => activeFilter = "Data"),
+                            child: FilterDropdown(
+                              label: "Data", 
+                              isSelected: activeFilter == "Data"
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => activeFilter = "Favoritos"),
+                            child: FilterDropdown(
+                              label: "Favoritos", 
+                              isSelected: activeFilter == "Favoritos"
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -149,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         final car = cars[index];
                         return CarCard(
-                          id: car.id, // ID unico para o hero e key
+                          id: car.id, 
                           imageUrl: car.imageUrl,
                           isEmpty: car.isEmpty,
                           name: car.name,

@@ -35,6 +35,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // FUNCAO PARA O GOOGLE
+  Future<void> _handleGoogleLogin() async {
+    final auth = context.read<AuthProvider>();
+    final error = await auth.signInWithGoogle(); 
+
+    if (error != null && mounted) {
+      _showSnackBar(error.toUpperCase(), Colors.redAccent);
+    } else if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -106,14 +118,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
                       
-                      // aqui o authProvider deve estar configurado para disparar o emailJS
                       final error = await auth.resetPassword(resetController.text.trim());
                       
                       if (error != null) {
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                         _showSnackBar(error.toUpperCase(), Colors.redAccent);
                       } else {
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                         _showSnackBar("LINK ENVIADO COM SUCESSO!", Colors.greenAccent);
                       }
                     },
@@ -228,7 +239,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
                         _buildSocialButton(
-                            "ENTRAR COM GOOGLE", Icons.g_mobiledata, isDark),
+                            "ENTRAR COM GOOGLE", Icons.g_mobiledata, isDark, 
+                            onTap: authLoading ? null : _handleGoogleLogin),
                         const SizedBox(height: 32),
                         GestureDetector(
                           onTap: () => Navigator.pushNamed(context, '/register'),

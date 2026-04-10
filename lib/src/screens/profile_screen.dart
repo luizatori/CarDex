@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart'; 
 import 'package:intl/intl.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -45,7 +46,6 @@ class ProfileWidgetItem {
 class _ProfileScreenState extends State<ProfileScreen> {
   final String customFont = 'IBM Plex Mono';
   
-  // valores padrao para o perfil , podem ser editados e salvos no sharedpreferences
   String profileName = "Colecionador";
   String customText = "Bem-vindo ao meu perfil!";
   String? mainFavoriteCarId;
@@ -72,13 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return user != null ? "${user.uid}_$key" : key;
   }
 
-  // funcao para buscar a data de criacao do usuario no firebase
   String _getMemberSinceDate() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && user.metadata.creationTime != null) {
       return DateFormat('MMM yyyy', 'pt_BR').format(user.metadata.creationTime!).toUpperCase();
     }
-    return "MAR 2026"; //fallback
+    return "MAR 2026";
   }
 
   Future<void> loadProfile() async {
@@ -181,6 +180,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (mounted) Navigator.pushReplacementNamed(context, '/login');
             },
             child: Text("SIM, SAIR", style: GoogleFonts.getFont(customFont, fontSize: 11, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  }
+
+void _confirmDeleteAccount() {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final textColor = isDark ? Colors.white : Colors.black;
+  final modalBg = isDark ? const Color(0xFF121212) : Colors.white;
+  final passwordController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: modalBg,
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      actionsOverflowButtonSpacing: 8,
+      actionsAlignment: MainAxisAlignment.end,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20), 
+        side: BorderSide(color: textColor.withOpacity(0.1))
+      ),
+      title: Text(
+        "EXCLUIR CONTA", 
+        style: GoogleFonts.getFont(customFont, fontSize: 16, fontWeight: FontWeight.bold, color: Colors.redAccent)
+      ),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Esta ação é irreversível. Digite sua senha para confirmar:", 
+              style: GoogleFonts.getFont(customFont, fontSize: 13, color: textColor.withOpacity(0.7))
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              style: GoogleFonts.getFont(customFont, color: textColor, fontSize: 14),
+              decoration: InputDecoration(
+                hintText: "Sua senha",
+                hintStyle: GoogleFonts.getFont(customFont, color: textColor.withOpacity(0.3), fontSize: 12),
+                filled: true,
+                fillColor: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[100],
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "CANCELAR", 
+            style: GoogleFonts.getFont(customFont, fontSize: 11, color: textColor.withOpacity(0.5))
+          ),
+        ),
+          TextButton(
+            onPressed: () async {
+              try {
+                User? user = FirebaseAuth.instance.currentUser;
+                if (user != null && user.email != null) {
+                  AuthCredential credential = EmailAuthProvider.credential(email: user.email!, password: passwordController.text);
+                  await user.reauthenticateWithCredential(credential);
+                  await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+                  await user.delete();
+                  if (mounted) Navigator.pushReplacementNamed(context, '/login');
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Erro ao excluir: Senha incorreta ou falha no servidor.")));
+              }
+            },
+            child: Text("EXCLUIR TUDO", style: GoogleFonts.getFont(customFont, fontSize: 11, fontWeight: FontWeight.bold, color: Colors.redAccent)),
           ),
         ],
       ),
@@ -325,27 +403,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: isDark ? Colors.white60 : Colors.black54,
                 fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,      
+          runSpacing: 12, 
           children: [
             OutlinedButton.icon(
               onPressed: openEditModal,
               icon: Icon(Icons.tune, size: 16, color: textColor),
-              label: Text("PERSONALIZAR PERFIL",
-                  style: GoogleFonts.getFont(customFont, color: textColor, fontSize: 10, fontWeight: FontWeight.bold)),
+              label: Text(
+                "PERSONALIZAR PERFIL",
+                style: GoogleFonts.getFont(customFont, 
+                  color: textColor, 
+                  fontSize: 10, 
+                  fontWeight: FontWeight.bold
+                ),
+              ),
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: textColor.withOpacity(0.15)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                side: BorderSide(color: textColor.withOpacity(0.15)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              ),
             ),
-            const SizedBox(width: 12),
             OutlinedButton(
               onPressed: _confirmLogout,
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: textColor.withOpacity(0.15)),
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(10)),
+                side: BorderSide(color: textColor.withOpacity(0.15)),
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(10),
+              ),
               child: Icon(Icons.logout, size: 16, color: textColor),
+            ),
+            OutlinedButton(
+              onPressed: _confirmDeleteAccount,
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.redAccent.withOpacity(0.15)),
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(10),
+              ),
+              child: Icon(Icons.delete_outline, size: 16, color: Colors.redAccent),
             ),
           ],
         ),
