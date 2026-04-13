@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 
+// WIDGET DE NAVEGACAO INFERIOR, RESPONSAVEL POR EXIBIR OS BOTOES DE NAVEGACAO ENTRE A HOME E O PERFIL, ALEM DE PERMITIR A TROCA ENTRE OS TEMAS CLARO E ESCURO
 class BottomNav extends StatelessWidget {
   final bool isProfile;
 
+// o parametro isProfile indica se estamos na tela de perfil ou na tela principal, para ajustar a funcao do botao de navegacao
   const BottomNav({
     super.key,
     required this.isProfile,

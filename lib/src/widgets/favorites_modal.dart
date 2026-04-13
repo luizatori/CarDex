@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/car.dart';
 
+// FUNCAO PARA EXIBIR O MODAL DE FAVORITOS, RECEBE A LISTA DE CARROS, OS IDS DOS CARROS FAVORITOS ATUAIS E O NUMERO MAXIMO DE FAVORITOS PERMITIDOS, RETORNANDO A LISTA DE IDS DOS CARROS SELECIONADOS COMO FAVORITOS PELO USUARIO
 Future<List<String>?> showFavoritesModal(
   BuildContext context, {
   required List<CarItem> cars,

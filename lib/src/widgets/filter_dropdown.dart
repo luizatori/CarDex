@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart'; 
 import '../providers/theme_provider.dart';
 
+// WIDGET DE DROPDOWN DE FILTRO, RESPONSAVEL POR EXIBIR O NOME DO FILTRO ATIVO E UM ICON DE SETA PARA BAIXO, COM ESTILO COERENTE COM O RESTANTE DO APP, INDICANDO VISUALMENTE QUAL FILTRO ESTA ATIVO
 class FilterDropdown extends StatelessWidget {
   final String label;
   final bool isSelected; 

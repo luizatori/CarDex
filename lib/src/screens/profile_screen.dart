@@ -15,6 +15,7 @@ import '../providers/cars_provider.dart';
 import '../models/car.dart';
 import '../widgets/favorites_modal.dart';
 
+// TELA DE PERFIL, RESPONSAVEL POR EXIBIR AS INFORMACOES DO USUARIO, PERMITINDO PERSONALIZACAO DO PERFIL, GERENCIAMENTO DE FAVORITOS E ACESSO AS CONFIGURACOES DE CONTA
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -22,6 +23,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+// enum para identificar os tipos de widgets que o usuario pode escolher exibir no perfil
 enum WidgetType {
   totalCars,
   favorites,
@@ -51,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? mainFavoriteCarId;
   String? profileImagePath;
   List<String> favoriteCarIds = [];
-
+ // lista de widgets disponiveis para personalizacao do perfil, o usuario pode escolher quais exibir e em qual ordem
   List<ProfileWidgetItem> widgets = [
     ProfileWidgetItem(id: "w1", type: WidgetType.totalCars, visible: true),
     ProfileWidgetItem(id: "w2", type: WidgetType.favorites, visible: true),
@@ -66,12 +68,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     loadProfile();
   }
-
+ // chave unica com preferencias do usuario
   String _userKey(String key) {
     final user = FirebaseAuth.instance.currentUser;
     return user != null ? "${user.uid}_$key" : key;
   }
 
+// widget para exibir a data de cadastro do usuario, em pt-br
   String _getMemberSinceDate() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && user.metadata.creationTime != null) {
@@ -80,8 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return "MAR 2026";
   }
 
+// METODO PARA CARREGAR AS INFORMACOES DO PERFIL DO USUARIO
   Future<void> loadProfile() async {
     setState(() {
+      // valores padrao caso nao haja dados salvos
       profileName = "Colecionador";
       customText = "Bem-vindo ao meu perfil!";
       mainFavoriteCarId = null;
@@ -100,6 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     final savedOrder = prefs.getStringList(_userKey("widgetsOrder"));
 
+// carrega os dados salvos nas preferencias do usuario, caso haja, e atualiza o estado para exibir as informacoes no perfil, caso haja uma ordem salva de widgets, ordena a lista de widgets de acordo com a ordem salva, caso contrario, mantem a ordem padrao
     if (mounted) {
       setState(() {
         profileName = prefs.getString(_userKey("profileName")) ?? "Colecionador";
@@ -133,6 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+// METODO PARA SALVAR AS INFORMACOES DO PERFIL DO USUARIO NAS PREFERENCIAS
   Future<void> saveProfileData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_userKey("profileName"), profileName);
@@ -148,6 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+// METODO PARA PERMITIR AO USUARIO ESCOLHER UMA IMAGEM DE PERFIL DA GALERIA
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -157,11 +165,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+// METODO PARA EXIBIR MODAL DE LOGOUT
   void _confirmLogout() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black;
     final modalBg = isDark ? const Color(0xFF121212) : Colors.white;
 
+// exibe um dialog de confirmacao de logout, caso o usuario confirme, chama o metodo de logout do FirebaseAuth e redireciona para a tela de login, caso contrario, fecha o dialog e mantem o usuario logado
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -186,12 +196,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+// METODO PARA EXIBIR MODAL DE CONFIRMACAO DE EXCLUSAO DE CONTA
 void _confirmDeleteAccount() {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final textColor = isDark ? Colors.white : Colors.black;
   final modalBg = isDark ? const Color(0xFF121212) : Colors.white;
   final passwordController = TextEditingController();
 
+// exibe um dialog de confirmacao de exclusao de conta, solicita a senha do usuario para confirmar a exclusao, caso o usuario confirme e a senha esteja correta, exclui a conta do FirebaseAuth e os dados do Firestore, redireciona para a tela de login, caso contrario, exibe uma mensagem de erro e mantem a conta ativa
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -243,6 +255,7 @@ void _confirmDeleteAccount() {
             style: GoogleFonts.getFont(customFont, fontSize: 11, color: textColor.withOpacity(0.5))
           ),
         ),
+        // botao de confirmacao de exclusao, chama a funcao de exclusao de conta, trata erros e exibe mensagens para o usuario
           TextButton(
             onPressed: () async {
               try {
@@ -265,6 +278,7 @@ void _confirmDeleteAccount() {
     );
   }
 
+// METODO PARA EXIBIR O MODAL DE GERENCIAMENTO DE FAVORITOS
   void _openFavoritesManager() async {
     final carsProvider = Provider.of<CarsProvider>(context, listen: false);
     final List<String>? result = await showFavoritesModal(
@@ -311,7 +325,7 @@ void _confirmDeleteAccount() {
       ),
     );
   }
-
+ // METODO DE CONSTRUCAO DO SLOT DE FAVORITOS
   Widget _buildFavoriteSlot(int index, bool isDark, List<CarItem> allCars) {
     final textColor = isDark ? Colors.white : Colors.black;
     CarItem? car;
@@ -449,7 +463,7 @@ void _confirmDeleteAccount() {
       ],
     );
   }
-
+ // METODO PARA RENDERIZAR OS WIDGETS DE PERSONALIZACAO DO PERFIL, RECEBE O TIPO DO WIDGET E EXIBE O CONTEUDO CORRESPONDENTE, COMO TOTAL DE CARROS, FAVORITOS, CARRO DESTAQUE, NÍVEL DA COLECAO, DATA DE MEMBRO E TEXTO PERSONALIZADO
   Widget renderWidget(ProfileWidgetItem w, bool isDark, int totalCars, List<CarItem> allCars) {
     return Card(
       color: isDark ? const Color(0xFF1A1A1A) : Colors.white.withOpacity(0.9),
@@ -464,7 +478,7 @@ void _confirmDeleteAccount() {
       ),
     );
   }
-
+// metodo auxiliar para obter o conteudo do widget de personalizacao, baseado no tipo do widget, retorna o conteudo correspondente
   Widget _getWidgetContent(ProfileWidgetItem w, bool isDark, int totalCars, List<CarItem> allCars) {
     final textColor = isDark ? Colors.white : Colors.black;
     final subColor = isDark ? Colors.white60 : Colors.black54;
@@ -508,6 +522,7 @@ void _confirmDeleteAccount() {
           ],
         );
 
+// METODO PARA RENDERIZAR O SLOT DE CARRO FAVORITO, EXIBE O CARRO DESTAQUE SE HOUVER, CASO CONTRARIO, EXIBE UM BOTAO PARA SELECIONAR O CARRO DESTAQUE, PERMITE AO USUARIO GERENCIAR O CARRO DESTAQUE ATRAVES DE UM MODAL COM A LISTA DE CARROS DA COLECAO
       case WidgetType.favoriteCar:
         CarItem? mainCar;
         if (mainFavoriteCarId != null) {
@@ -552,6 +567,7 @@ void _confirmDeleteAccount() {
           ),
         ]);
 
+// METODO PARA RENDERIZAR O SLOT DE NÍVEL DA COLECAO, CALCULA O NIVEL BASEADO NO TOTAL DE CARROS E EXIBE O NIVEL ATUAL DO USUÁRIO, O NIVEL AUMENTA A CADA 5 CARROS ADICIONADOS NA COLECAO
       case WidgetType.level:
         return Row(children: [
           Icon(Icons.tag, size: 14, color: subColor),
@@ -561,9 +577,11 @@ void _confirmDeleteAccount() {
           Text("LVL $level", style: GoogleFonts.getFont(customFont, fontWeight: FontWeight.bold, color: textColor)),
         ]);
 
+// METODO PARA RENDERIZAR O SLOT DE TEXTO PERSONALIZADO, EXIBE O TEXTO PERSONALIZADO DEFINIDO PELO USUARIO
       case WidgetType.customText:
         return Text(customText, style: GoogleFonts.getFont(customFont, color: textColor, fontSize: 13));
 
+// METODO PARA RENDERIZAR O SLOT DE DATA DE CADASTRO
       case WidgetType.memberSince:
         return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -581,6 +599,7 @@ void _confirmDeleteAccount() {
     }
   }
 
+// METODO PARA EXIBIR O MODAL DE PERSONALIZACAO DO PERFIL
   void openEditModal() {
     final nameController = TextEditingController(text: profileName);
     final textController = TextEditingController(text: customText);

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../providers/cars_provider.dart';
 
 
-// estado de preview expandida do carro, com detalhes e opcao de deletar
+// WIDGET DE PREVIEW EXPANDIDA DE CADA CARRO, RESPONSAVEL POR EXIBIR A IMAGEM EM MAIOR DETALHE (com efeito 3d), ALEM DE MODAL COM INFORMAÇÕES DETALHADAS E OPCAO DE EXCLUSAO DO CARRO DA COLECAO
 
 class CarExpandedView extends StatefulWidget {
   final String id;
@@ -15,6 +15,7 @@ class CarExpandedView extends StatefulWidget {
   final String description;
   final String heroTag;
 
+// construtor de CarExpandedView, recebe o id do carro, a URL da imagem, o nome, a descricao e a tag do Hero para a animacao de transicao
   const CarExpandedView({
     super.key,
     required this.id,
@@ -28,6 +29,7 @@ class CarExpandedView extends StatefulWidget {
   State<CarExpandedView> createState() => _CarExpandedViewState();
 }
 
+// estado de CarExpandedView, responsavel por gerenciar a logica de rotacao 3D da imagem
 class _CarExpandedViewState extends State<CarExpandedView> {
   double rotateX = 0;
   double rotateY = 0;
@@ -50,6 +52,7 @@ class _CarExpandedViewState extends State<CarExpandedView> {
             ),
           ),
           Center(
+            // WIDGET PRINCIPAL DE EXIBICAO DA IMAGEM DO CARRO, COM EFEITO 3D AO ARRASTAR E TOQUE PARA EXIBIR DETALHES
             child: GestureDetector(
               onPanUpdate: (details) {
                 setState(() {

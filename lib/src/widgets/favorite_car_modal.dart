@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/car.dart';
 
+
+// MODAL PARA SELECAO DE CARRO FAVORITO, EXIBE APENAS OS CARROS PREENCHIDOS COM IMAGEM, PERMITE BUSCA POR NOME E EXIBE UM INDICADOR VISUAL DO CARRO FAVORITO ATUAL
 Future<CarItem?> showFavoriteCarModal(
   BuildContext context, {
   required List<CarItem> cars,
@@ -15,6 +17,7 @@ Future<CarItem?> showFavoriteCarModal(
   );
 }
 
+// WIDGET DE MODAL DE SELECAO DE CARRO FAVORITO, RESPONSAVEL POR EXIBIR A LISTA DE CARROS PREENCHIDOS, PERMITIR FILTRAGEM POR NOME E SELECAO DO CARRO FAVORITO, RETORNANDO O CARRO SELECIONADO PARA O CHAMADOR
 class _FavoriteCarModal extends StatefulWidget {
   final List<CarItem> cars;
   final String? currentFavoriteId;
@@ -68,6 +71,7 @@ class _FavoriteCarModalState extends State<_FavoriteCarModal> {
     super.dispose();
   }
 
+// metodo de dispose do estado, utilizado para liberar os recursos do controlador de texto quando o modal for fechado, evitando vazamentos de memoria
   @override
   Widget build(BuildContext context) {
     final filledCars =

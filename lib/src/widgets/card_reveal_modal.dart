@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/cars_provider.dart';
 
+// WIDGET DE MODAL DE REVELACAO DE CARD, RESPONSAVEL POR EXIBIR O MODAL DE ADICAO DE NOVO CARRO QUANDO O USUARIO CLICA EM UM CARD VAZIO, INCLUINDO A LOGICA PARA SELECAO DE IMAGEM, NOME, DESCRICAO E MOLDURA DO CARRO, ALEM DE TRATAR A CRIACAO DO NOVO CARRO NA COLECAO DO USUÁRIO
 class MolduraConfig {
   final String id;
   final String nome;
@@ -41,6 +42,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
   final descController = TextEditingController();
   String? _tempImagePath; 
 
+// configuracoes de molduras disponiveis para os carros, com requisitos de desbloqueio baseados na quantidade de carros na colecao do usuario
   final List<MolduraConfig> molduras = [
     MolduraConfig(id: 'padrao', nome: 'Padrão', req: 0, cor: Colors.grey),
     MolduraConfig(id: 'vintage', nome: 'Vintage', req: 5, cor: const Color(0xFFD2B48C)),
@@ -72,6 +74,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
     super.dispose();
   }
 
+// funcao para lidar com a selecao de imagem, utilizando o ImagePicker para acessar a galeria do dispositivo e selecionar uma foto, armazenando o caminho temporariamente para exibir no modal antes de salvar definitivamente
   Future<void> _handleImageCapture() async {
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(
@@ -86,6 +89,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
     }
   }
 
+// FUNCAO PARA SALVAR O NOVO CARRO, VERIFICANDO SE A IMAGEM FOI SELECIONADA, EXIBINDO UM MODAL DE ERRO CASO NAO TENHA SIDO, E CHAMANDO O PROVIDER DE CARROS PARA ADICIONAR O NOVO CARRO NA COLECAO DO USUARIO
   void _showErrorModal(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
@@ -141,7 +145,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
   }
 
   void _saveAndCreate() async {
-    debugPrint("!!! O CLIQUE CHEGOU NA FUNÇÃO _saveAndCreate !!!");
+    debugPrint("carro sendo salvo");
     if (_tempImagePath == null) {
       _showErrorModal(context); 
       return;
@@ -170,6 +174,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
     }
   }
 
+// FUNCAO PARA EXIBIR UM MODAL DE ERRO CASO O USUÁRIO TENTE SALVAR UM CARRO SEM SELECIONAR UMA IMAGEM, COM DESIGN COERENTE COM O RESTANTE DO APP
   void _showLockPopup(MolduraConfig moldura) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
@@ -207,6 +212,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
   }
 
   @override
+  // metodo de build do modal, exibe o modal de adicao de novo carro, com campos para nome, descricao, selecao de imagem e moldura, alem de um botao para criar o novo carro, que chama a funcao de salvar e criar
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -277,6 +283,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
       ),
     );
   }
+
 
   Widget _buildFloatingCard(bool isDark) { 
     return Container(

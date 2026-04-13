@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// WIDGET DE EXIBICAO DE CADA CARTAO DE CARRO NA HOME, RESPONSAVEL POR EXIBIR A IMAGEM E O NOME DO CARRO, ALEM DE TRATAR O CLICK PARA ABRIR O DETALHES OU O MODAL DE ADICAO
 class CarCard extends StatelessWidget {
   final String id; 
   final String? imageUrl;
@@ -9,6 +10,7 @@ class CarCard extends StatelessWidget {
   final String? name;
   final VoidCallback? onTap;
 
+// construtor de CarCard, recebe o id do carro, a URL da imagem, se o card esta vazio
   const CarCard({
     super.key,
     required this.id, 
@@ -20,6 +22,7 @@ class CarCard extends StatelessWidget {
 
   static const int maxNameLength = 18;
 
+// metodo para exibir o nome do carro, limitando o numero de caracteres
   String get displayName {
     if (name == null || name!.isEmpty) return "";
     if (name!.length > maxNameLength) {

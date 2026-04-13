@@ -14,6 +14,7 @@ import '../widgets/vaporwave_background.dart';
 import '../widgets/vaporwave_logo.dart'; 
 import '../widgets/car_expanded_view.dart';
 
+// TELA PRINCIPAL DO APP, RESPONSAVEL POR EXIBIR A LISTA DE CARROS DO USUARIO, PERMITINDO FILTRAGEM E ACESSO AO DETALHES DE CADA CARRO
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -21,6 +22,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+// ESTADO DA TELA PRINCIPAL, RESPONSAVEL POR GERENCIAR A LOGICA DE EXIBICAO DOS CARROS, FILTRAGEM E NAVEGACAO PARA DETALHES E ADICAO DE NOVOS CARROS
 class _HomeScreenState extends State<HomeScreen> {
   CarItem? selectedCar;
   String activeFilter = "Data"; 
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedCar = car;
     });
 
+// se o card estiver vazio, abre o modal de adicao, caso contrario, redireciona para a preview expandida com detelhes
     if (!car.isEmpty) {
       Navigator.of(context).push(
         PageRouteBuilder(
@@ -76,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  // METODO DE BUILD DA TELA PRINCIPAL 
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDark;
     
@@ -94,10 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 return const Center(child: CircularProgressIndicator(color: Colors.cyanAccent));
               }
 
+              // logica de ordenacao e filtragem dos carros, dependendo do filtro ativo, os carros sao ordenados por data ou por favoritos
               List<CarItem> cars = snapshot.data ?? [];
               final filledCount = cars.where((c) => !c.isEmpty).length;
 
-              //LOGICA DE FILTRAGEM
+              // logica de filtragem
               if (activeFilter == "Data") {
        
                 cars.sort((a, b) {
@@ -112,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               }
 
+              // LOGICA DE EXIBICAO VISUAL DA TELA PRINCIPAL, EXIBINDO O LOGO, FILTROS E A GRADE DE CARROS
               return Column(
                 children: [
                   const SizedBox(height: 35), 

@@ -7,6 +7,7 @@ import '../widgets/vaporwave_background.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// TELA DE CADASTRO, RESPONSAVEL POR GERENCIAR O PROCESSO DE CADASTRO DE NOVOS USUARIOS, INCLUINDO A GERACAO DE CODIGO DE VERIFICACAO, ENVIO DE E-MAIL COM O CODIGO E VERIFICACAO DO CODIGO DIGITADO PELO USUARIO PARA CRIAR A CONTA
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -28,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         7, (_) => chars.codeUnitAt(Random().nextInt(chars.length))));
   }
 
+// METODO PARA ENVIAR O E-MAIL DE VERIFICACAO COM O CODIGO GERADO, UTILIZA A API DO EMAILJS PARA ENVIAR O E-MAIL, ENVIA O CODIGO DE VERIFICACAO PARA O E-MAIL DIGITADO PELO USUARIO
   Future<void> _sendEmail(String email, String code) async {
     final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
     
@@ -59,6 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+// METODO PARA GERENCIAR O PROCESSO DE CADASTRO
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -68,6 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+// METODO PARA EXIBIR O MODAL DE VERIFICACAO
   void _showVerificationModal(String email, String password, String username) {
     final TextEditingController codeController = TextEditingController();
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -160,7 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(
-                                color: Colors.cyanAccent, strokeWidth: 2))
+                                color: Color.fromARGB(255, 255, 255, 255), strokeWidth: 2))
                         : Text("CADASTRAR",
                             style: GoogleFonts.getFont(customFont,
                                 fontWeight: FontWeight.bold)),
@@ -174,6 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+// METODO PARA GERENCIAR O PROCESSO DE CADASTRO, VERIFICA SE OS CAMPOS ESTAO PREENCHIDOS, GERA O CODIGO DE VERIFICACAO, EXIBE O MODAL DE VERIFICACAO E ENVIA O E-MAIL COM O CODIGO GERADO
   Future<void> _handleRegister() async {
     final username = _userController.text.trim();
     final email = _emailController.text.trim();

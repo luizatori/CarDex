@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/vaporwave_background.dart';
 
+// TELA DE LOGIN, RESPONSAVEL POR EXIBIR O FORMULARIO DE LOGIN, BOTAO DE LOGIN COM GOOGLE E LINK PARA A TELA DE CADASTRO
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -16,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+// FUNCAO DE LOGIN COM EMAIL E SENHA, VERIFICA SE OS CAMPOS ESTAO PREENCHIDOS, CHAMA O METODO DE LOGIN DO PROVIDER E TRATA ERROS PARA EXIBIR AO USUARIO
   Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -56,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+// FUNCAO PARA EXIBIR O MODAL DE RECUPERACAO DE SENHA, PERMITE AO USUARIO INFORMAR O E-MAIL CADASTRADO PARA RECEBER O LINK DE REDEFINICAO VIA EMAILJS, TRATA ERROS E EXIBE MENSAGENS DE SUCESSO OU FALHA + ORDENACAO DE ELEMENTOS VISUAIS DO MODAL E DESIGN
   void _showForgotPasswordModal(BuildContext context) {
     final TextEditingController resetController = TextEditingController();
     final isDark = Theme.of(context).brightness == Brightness.dark;

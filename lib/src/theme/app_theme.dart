@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// CLASSE DE DEFINICAO DOS TEMAS CLARO E ESCURO DO APP, INCLUINDO CORES, TIPOGRAFIAS E ESTILOS DE COMPONENTES PARA GARANTIR UMA APARÊNCIA COERENTE E PERSONALIZADA (nao utulizado no momento)
 class AppTheme {
 
   static const Color backgroundLight = Color(0xFFF6F5F4);

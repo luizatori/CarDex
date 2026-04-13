@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 
+// WIDGET DA LOGO VAPORWAVE, RESPONSAVEL POR EXIBIR A LOGO DO APP COM UM EFEITO DE PULSACAO E UM SWEEP DE LUZ NEON
 class VaporwaveLogo extends StatefulWidget {
   final double size;
 
@@ -74,7 +75,7 @@ class _VaporwaveLogoState extends State<VaporwaveLogo> with SingleTickerProvider
               ),
             ),
 
-            // 2. A LOGO 
+            // A LOGO 
             Image.asset(
               logoPath,
               width: widget.size,
@@ -82,7 +83,7 @@ class _VaporwaveLogoState extends State<VaporwaveLogo> with SingleTickerProvider
               fit: BoxFit.contain,
             ),
 
-            // 3. CRT GLASS OVERLAY 
+            // CRT GLASS OVERLAY 
             IgnorePointer(
               child: Container(
                 width: widget.size,
@@ -103,7 +104,7 @@ class _VaporwaveLogoState extends State<VaporwaveLogo> with SingleTickerProvider
               ),
             ),
 
-            // 4. NEON SWEEP LINE 
+            // NEON SWEEP LINE 
             AnimatedBuilder(
               animation: _sweepAnimation,
               builder: (context, child) {

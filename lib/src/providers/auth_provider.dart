@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:google_sign_in/google_sign_in.dart'; 
 
+// PROVIDER DE AUTENTICACAO, RESPONSAVEL POR GERENCIAR O LOGIN, CADASTRO, RESET DE SENHA E LOGOUT
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -22,6 +23,7 @@ class AuthProvider extends ChangeNotifier {
         await _googleSignIn.disconnect();
       }
 
+      // inicia o processo de loginc com google 
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       
       if (googleUser == null) {
@@ -37,31 +39,32 @@ class AuthProvider extends ChangeNotifier {
         idToken: googleAuth.idToken,
       );
 
-      // VERIFICACAO DE USUARIO EXISTENTE SEM USAR FETCH 
+      // VERIFICACAO DE USUARIO EXISTENTE 
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       
       if (userCredential.additionalUserInfo?.isNewUser ?? false) {
         
-        // se o usuario for novo, deletamos a conta criada e barramos o acesso
+        // se o usuario for novo, exclui a conta criada automaticamente e desloga do google para evitar confusao
 
         await userCredential.user?.delete();
         await _googleSignIn.signOut();
         _isLoading = false;
         notifyListeners();
-        return 'ESTE E-MAIL NÃO POSSUI CADASTRO. POR FAVOR, CADASTRE-SE PRIMEIRO.';
+        return 'ESTE E-MAIL NÃO POSSUI CADASTRO. POR FAVOR, CADASTRE-SE PRIMEIRO.'; // se o usuario for novo, retorna mensagem de erro para cadastrar primeiro
       }
 
+// se o usuario ja existe, continua normalmente e salva os dados no Firestore caso seja o primeiro login com google
       _isLoading = false;
       notifyListeners();
       return null;
     } on FirebaseAuthException catch (e) {
       _isLoading = false;
       notifyListeners();
-      return _handleAuthError(e);
+      return _handleAuthError(e); 
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      return 'ERRO AO ENTRAR COM GOOGLE: $e';
+      return 'ERRO AO ENTRAR COM GOOGLE: $e'; 
     }
   }
 
@@ -130,12 +133,15 @@ class AuthProvider extends ChangeNotifier {
 
       final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
       
+      // encaminha a requisicao para o EmailJS para enviar um email de reset personalizado
       await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
           'Origin': 'http://localhost', 
         },
+      
+      // o corpo da requisicao inclui os parametros nescessarios para o template de email do EmailJS
         body: json.encode({
           'service_id': 'service_vtmpebg',
           'template_id': 'template_jwlfm0n',
@@ -147,6 +153,7 @@ class AuthProvider extends ChangeNotifier {
         }),
       );
 
+// tratamento de reposta do EmailJS para verificacao de sucesso ou falha 
       _isLoading = false;
       notifyListeners();
       return null;
@@ -162,13 +169,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // LOGOUT 
+  // FUNCAO DE LOGOUT 
   Future<void> signOut() async {
     await _googleSignIn.signOut(); 
     await _auth.signOut(); 
   }
 
-  // tratamento de erros 
+  // tratamento de erros de autenticacao 
   String _handleAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found': return 'Usuário não encontrado.';

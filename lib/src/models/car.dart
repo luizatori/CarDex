@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// MODELO DE DADOS PARA CADA CARD DE CARRO
 class CarItem {
   final String id;
   String name;
@@ -11,6 +12,7 @@ class CarItem {
   final dynamic createdAt; 
   final dynamic updatedAt;
 
+// construtor de CarItem
   CarItem({
     required this.id,
     required this.name,
@@ -23,8 +25,10 @@ class CarItem {
     required this.updatedAt,
   });
 
+// metodo para verificar se a imagem e um base64 ou uma URL 
   bool get isBase64 => imageUrl != null && imageUrl!.length > 100;
 
+// factory para criar um CarItem vazio, usado para popular o slot de adicionar novo carro
   factory CarItem.empty(String id) {
     final now = DateTime.now().toIso8601String();
     return CarItem(
@@ -39,9 +43,11 @@ class CarItem {
     );
   }
 
+// factory para criar um CarItem a partir de um documento do Firestore 
   factory CarItem.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     
+    // garantir que os campos obrigatorios estejam presentes, mesmo que sejam vazios 
     return CarItem(
       id: doc.id,
       name: data['name'] ?? "",
@@ -55,12 +61,13 @@ class CarItem {
     );
   }
 
+// metodo para converter um CarItem em um mapa, usado para salvar no Firestore 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'description': description,
       'imageUrl': imageUrl,
-      'style': style,
+      'style': style, // garantir que o estilo de moldura seja salvo corretamente, mesmo sendo o padrao 
       'isFavorite': isFavorite, 
       'createdAt': createdAt,
       'updatedAt': DateTime.now().toIso8601String(),
@@ -69,7 +76,6 @@ class CarItem {
 }
 
 // CONFIGURACAO DAS MOLDURAS 
-
 class StyleOption {
   final String key;
   final String label;

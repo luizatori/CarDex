@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+// WIDGET DE FUNDO COM GRID PERSPECTIVA E EFEITO CRT, RESPONSAVEL POR EXIBIR O FUNDO VAPORWAVE DO APP, COM GRID ANIMADA PARA DAR SENSACAO DE MOVIMENTO E PROFUNDIDADE, ALEM DE UM GRADIENTE DE FADE NO HORIZONTE PARA DAR MAIS PROFUNDIDADE E UM EFEITO DE SCANLINES PARA DAR O ASPECTO DE TELA ANTIGA
 class VaporwaveBackground extends StatefulWidget {
   final Widget child;
   const VaporwaveBackground({super.key, required this.child});
@@ -39,10 +40,10 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
 
     return Stack(
       children: [
-        // 1. COR DE FUNDO SOLIDA
+        // COR DE FUNDO SOLIDA
         Positioned.fill(child: Container(color: bgColor)),
 
-        // 2. GRID DO TETO
+        // GRID DO TETO
         Positioned(
           top: 0,
           left: 0,
@@ -60,7 +61,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 3. GRID DO CHAO (COM GLOW SUTIL)
+        // GRID DO CHAO (COM GLOW SUTIL)
         Positioned(
           bottom: 0,
           left: 0,
@@ -78,7 +79,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 4. FADE DO HORIZONTE
+        // FADE DO HORIZONTE
         Positioned.fill(
           child: IgnorePointer(
             child: Container(
@@ -100,7 +101,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 5. EFEITO CRT SCANLINES (As linhas de TV antiga)
+        // EFEITO CRT SCANLINES (As linhas de TV antiga)
         Positioned.fill(
           child: IgnorePointer(
             child: CustomPaint(
@@ -111,7 +112,7 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 6. VINHETA CRT (
+        // VINHETA CRT 
         Positioned.fill(
           child: IgnorePointer(
             child: Container(
@@ -130,14 +131,14 @@ class _VaporwaveBackgroundState extends State<VaporwaveBackground>
           ),
         ),
 
-        // 7. O CONTEUDO (Logo, cards, etc)
+        // CONTEUDO
         widget.child,
       ],
     );
   }
 }
 
-// --- PAINTER PARA AS SCANLINES (EFEITO CRT) ---
+// PAINTER PARA AS SCANLINES 
 class CRTScanlinePainter extends CustomPainter {
   final Color color;
   CRTScanlinePainter({required this.color});
@@ -179,7 +180,7 @@ class PerspectiveGridPainter extends CustomPainter {
     final double horizonY = isFloor ? 0 : size.height;
     final double nearY = isFloor ? size.height : 0;
 
-    // 1. VERTICAIS
+    // VERTICAIS
     for (int i = -25; i <= 25; i++) {
       double xOffsetBase = i * 40.0; 
       double xHorizon = centerX + (xOffsetBase * 0.4); 
@@ -188,7 +189,7 @@ class PerspectiveGridPainter extends CustomPainter {
       canvas.drawLine(Offset(xHorizon, horizonY), Offset(xNear, nearY), paint);
     }
 
-    // 2. HORIZONTAIS
+    // HORIZONTAIS
     final int horizontalLines = 15;
     for (int i = 0; i <= horizontalLines; i++) {
       double movingProgress = (i + progress) / horizontalLines;
