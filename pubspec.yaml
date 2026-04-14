@@ -53,8 +53,10 @@ dependencies:
   intl: ^0.20.2
   emailjs: ^1.0.4
   http: ^1.1.0
-  google_sign_in: ^6.2.1          # para login com google
-  
+  google_sign_in: ^6.2.1           # para login com google
+  google_mlkit_image_labeling: ^0.12.0                   # para reconhecimento de imagens
+  google_mlkit_object_detection: ^0.13.0                 # para o blur na placa do carro 
+  google_mlkit_text_recognition: ^0.13.0
 
 
   # The following adds the Cupertino Icons font to your application.

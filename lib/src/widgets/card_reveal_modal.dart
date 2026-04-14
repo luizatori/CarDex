@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/cars_provider.dart';
 
-// WIDGET DE MODAL DE REVELACAO DE CARD, RESPONSAVEL POR EXIBIR O MODAL DE ADICAO DE NOVO CARRO QUANDO O USUARIO CLICA EM UM CARD VAZIO, INCLUINDO A LOGICA PARA SELECAO DE IMAGEM, NOME, DESCRICAO E MOLDURA DO CARRO, ALEM DE TRATAR A CRIACAO DO NOVO CARRO NA COLECAO DO USUÁRIO
+// MODAL DE REVELACAO DO CARD, COM TODAS AS OPCOES DE CUSTOMIZACAO E ACAO DE SALVAR O NOVO CARRO
 class MolduraConfig {
   final String id;
   final String nome;
@@ -42,7 +42,6 @@ class _CardRevealModalState extends State<CardRevealModal> {
   final descController = TextEditingController();
   String? _tempImagePath; 
 
-// configuracoes de molduras disponiveis para os carros, com requisitos de desbloqueio baseados na quantidade de carros na colecao do usuario
   final List<MolduraConfig> molduras = [
     MolduraConfig(id: 'padrao', nome: 'Padrão', req: 0, cor: Colors.grey),
     MolduraConfig(id: 'vintage', nome: 'Vintage', req: 5, cor: const Color(0xFFD2B48C)),
@@ -60,6 +59,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
 
   late MolduraConfig selectedSkin;
 
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +74,6 @@ class _CardRevealModalState extends State<CardRevealModal> {
     super.dispose();
   }
 
-// funcao para lidar com a selecao de imagem, utilizando o ImagePicker para acessar a galeria do dispositivo e selecionar uma foto, armazenando o caminho temporariamente para exibir no modal antes de salvar definitivamente
   Future<void> _handleImageCapture() async {
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(
@@ -89,7 +88,8 @@ class _CardRevealModalState extends State<CardRevealModal> {
     }
   }
 
-// FUNCAO PARA SALVAR O NOVO CARRO, VERIFICANDO SE A IMAGEM FOI SELECIONADA, EXIBINDO UM MODAL DE ERRO CASO NAO TENHA SIDO, E CHAMANDO O PROVIDER DE CARROS PARA ADICIONAR O NOVO CARRO NA COLECAO DO USUARIO
+// Exibe um modal de erro caso o usuario tente salvar sem uma foto
+
   void _showErrorModal(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
@@ -144,6 +144,71 @@ class _CardRevealModalState extends State<CardRevealModal> {
     );
   }
 
+// exibe um modal caso a imagem selecionada nao seja de um carro, usando o ML Kit para validar a imagem antes de salvar
+  void _showNoVehicleModal(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Dialog(
+          backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.directions_car, size: 32, color: Colors.red),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "VEÍCULO NÃO DETECTADO!",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.ibmPlexMono(
+                    fontSize: 14, 
+                    fontWeight: FontWeight.bold, 
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "A imagem selecionada não parece ser um carro ou veículo terrestre.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.ibmPlexMono(
+                    fontSize: 11, 
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? Colors.white : Colors.black,
+                      foregroundColor: isDark ? Colors.black : Colors.white,
+                    ),
+                    child: Text("TENTAR OUTRA", style: GoogleFonts.ibmPlexMono(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+// FUNCAO DE SALVAR O CARRO, COM VALIDACAO DE IMAGEM E PROCESSAMENTO PARA BLUR DE PLACA E REDIMENSIONAMENTO
   void _saveAndCreate() async {
     debugPrint("carro sendo salvo");
     if (_tempImagePath == null) {
@@ -170,11 +235,16 @@ class _CardRevealModalState extends State<CardRevealModal> {
       widget.onClose(); 
     } catch (e) {
       if (mounted) Navigator.of(context).pop(); 
-      debugPrint("Erro ao salvar: $e");
+      
+      if (e.toString().contains("Nenhum veículo detectado")) {
+        if (mounted) _showNoVehicleModal(context);
+      } else {
+        debugPrint("Erro ao salvar: $e");
+      }
     }
   }
 
-// FUNCAO PARA EXIBIR UM MODAL DE ERRO CASO O USUÁRIO TENTE SALVAR UM CARRO SEM SELECIONAR UMA IMAGEM, COM DESIGN COERENTE COM O RESTANTE DO APP
+// modal de bloqueio para molduras, exibindo os requisitos para desbloqueio
   void _showLockPopup(MolduraConfig moldura) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
@@ -212,7 +282,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
   }
 
   @override
-  // metodo de build do modal, exibe o modal de adicao de novo carro, com campos para nome, descricao, selecao de imagem e moldura, alem de um botao para criar o novo carro, que chama a funcao de salvar e criar
+  // BUILD DO MODAL, COM ESTRUTURA DE HEADER, FOTO, CAMPOS DE TEXTO, SELECAO DE MOLDURA E BOTAO DE CRIAR
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -220,7 +290,6 @@ class _CardRevealModalState extends State<CardRevealModal> {
       backgroundColor: Colors.transparent, 
       body: Stack(
         children: [
-          // FUNDO QUE FECHA O MODAL
           GestureDetector(
             onTap: widget.onClose,
             child: BackdropFilter(
@@ -228,10 +297,9 @@ class _CardRevealModalState extends State<CardRevealModal> {
               child: Container(color: Colors.black.withOpacity(0.4)),
             ),
           ),
-          // MODAL CENTRALIZADO
           Center(
             child: GestureDetector(
-              onTap: () {}, // ESCUDO
+              onTap: () {}, 
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.85,
                 height: MediaQuery.of(context).size.height * 0.85,
@@ -283,7 +351,6 @@ class _CardRevealModalState extends State<CardRevealModal> {
       ),
     );
   }
-
 
   Widget _buildFloatingCard(bool isDark) { 
     return Container(
@@ -358,6 +425,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
     );
   }
 
+//
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
