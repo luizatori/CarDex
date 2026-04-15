@@ -95,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
             stream: context.watch<CarsProvider>().carStream, 
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: Colors.cyanAccent));
               }
 
               // logica de ordenacao e filtragem dos carros, dependendo do filtro ativo, os carros sao ordenados por data ou por favoritos
