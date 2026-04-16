@@ -50,7 +50,6 @@ class _CardRevealModalState extends State<CardRevealModal> {
     MolduraConfig(id: 'holo', nome: 'Holo', req: 25, cor: const Color(0xFFB19CD9)),
     MolduraConfig(id: 'carmesim', nome: 'Carmesim', req: 30, cor: const Color(0xFFDC143C)),
     MolduraConfig(id: 'rosa-pastel', nome: 'Rosa Pastel', req: 35, cor: const Color(0xFFFFD1DC)),
-    MolduraConfig(id: 'destruido', nome: 'Destruído', req: 40, cor: const Color(0xFF4F4F4F)),
     MolduraConfig(id: 'carbono', nome: 'Carbono', req: 50, cor: const Color(0xFF2F2F2F)),
     MolduraConfig(id: 'natureza', nome: 'Natureza', req: 60, cor: const Color(0xFF90EE90)),
     MolduraConfig(id: 'neon', nome: 'Neon', req: 100, cor: const Color(0xFF00FFFF)),
@@ -227,7 +226,7 @@ class _CardRevealModalState extends State<CardRevealModal> {
       await carsProvider.addCarFromGallery(
         name: nameController.text.trim().isEmpty ? "Novo Spot" : nameController.text.trim(),
         description: descController.text.trim(),
-        style: selectedSkin.nome,
+        style: selectedSkin.id,
         imageFile: File(_tempImagePath!), 
       );
 

@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             id: car.id, 
             imageUrl: car.imageUrl ?? "",
             name: car.name,
+            style: car.style,
             description: car.description,
             heroTag: 'car_hero_${car.id}',
           ),
@@ -187,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           imageUrl: car.imageUrl,
                           isEmpty: car.isEmpty,
                           name: car.name,
+                          style: car.style, 
                           onTap: () => handleCardClick(car, filledCount),
                         );
                       },

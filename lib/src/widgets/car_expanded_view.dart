@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/cars_provider.dart';
+import '../utils/car_styles.dart';
 
-
-// WIDGET DE PREVIEW EXPANDIDA DE CADA CARRO, RESPONSAVEL POR EXIBIR A IMAGEM EM MAIOR DETALHE (com efeito 3d), ALEM DE MODAL COM INFORMAÇÕES DETALHADAS E OPCAO DE EXCLUSAO DO CARRO DA COLECAO
-
+// WIDGET DE PREVIEW EXPANDIDA DO CARRO, RESPONSAVEL POR EXIBIR DETALHES DO CARRO SELECIONADO, INCLUINDO IMAGEM EM MAIOR RESOLUCAO, NOME, DESCRICAO E APLICAR O ESTILO VISUAL DEFINIDO PELO TEMA DO CARRO
 class CarExpandedView extends StatefulWidget {
   final String id;
   final String imageUrl;
   final String name;
   final String description;
   final String heroTag;
+  final String style;
 
-// construtor de CarExpandedView, recebe o id do carro, a URL da imagem, o nome, a descricao e a tag do Hero para a animacao de transicao
   const CarExpandedView({
     super.key,
     required this.id,
@@ -23,13 +22,14 @@ class CarExpandedView extends StatefulWidget {
     required this.name,
     required this.description,
     required this.heroTag,
+    required this.style,
   });
 
   @override
   State<CarExpandedView> createState() => _CarExpandedViewState();
 }
 
-// estado de CarExpandedView, responsavel por gerenciar a logica de rotacao 3D da imagem
+// ESTADO DO WIDGET DE PREVIEW EXPANDIDA, RESPONSAVEL POR GERENCIAR A LOGICA DE INTERACAO COM O USUARIO, INCLUINDO EFEITOS DE ROTACAO 3D AO TOCAR E EXIBICAO DE DETALHES EM UM MODAL
 class _CarExpandedViewState extends State<CarExpandedView> {
   double rotateX = 0;
   double rotateY = 0;
@@ -52,7 +52,6 @@ class _CarExpandedViewState extends State<CarExpandedView> {
             ),
           ),
           Center(
-            // WIDGET PRINCIPAL DE EXIBICAO DA IMAGEM DO CARRO, COM EFEITO 3D AO ARRASTAR E TOQUE PARA EXIBIR DETALHES
             child: GestureDetector(
               onPanUpdate: (details) {
                 setState(() {
@@ -101,22 +100,15 @@ class _CarExpandedViewState extends State<CarExpandedView> {
     );
   }
 
+// METODO DE CONSTRUCAO DO POLAROID FISICO, RESPONSAVEL POR EXIBIR A IMAGEM DO CARRO EM MAIOR RESOLUCAO COM UM EFEITO DE BRILHO DINAMICO BASEADO NA POSICAO DO TOQUE DO USUARIO, ALÉM DE EXIBIR O NOME DO CARRO APLICANDO O ESTILO VISUAL DEFINIDO PELO TEMA
   Widget _buildPhysicalPolaroid(bool isDark) {
+    final carTheme = CarSkinTheme.getTheme(widget.style, isDark);
+
     return Container(
       width: MediaQuery.of(context).size.width * 0.76,
       height: MediaQuery.of(context).size.height * 0.52,
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 40,
-            offset: const Offset(0, 20),
-          ),
-        ],
-      ),
+      decoration: carTheme.decoration, 
       child: Material(
         color: Colors.transparent,
         child: Column(
@@ -132,19 +124,14 @@ class _CarExpandedViewState extends State<CarExpandedView> {
                               color: Colors.black45,
                               child: const Icon(Icons.directions_car, color: Colors.white24),
                             )
-                          : AspectRatio(
-                              aspectRatio: 3 / 4, // AJUSTE: Força a proporção correta
-                              child: Image.memory(
-                                base64Decode(widget.imageUrl),
-                                key: ValueKey(widget.id), // AJUSTE: Mantém a imagem viva no 3D
-                                fit: BoxFit.cover,
-                                gaplessPlayback: true, // AJUSTE: Evita o "pisca" ao rotacionar
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.black45,
-                                    child: const Icon(Icons.broken_image, color: Colors.redAccent),
-                                  );
-                                },
+                          : Image.memory(
+                              base64Decode(widget.imageUrl),
+                              key: ValueKey(widget.id),
+                              fit: BoxFit.cover,
+                              gaplessPlayback: true,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: Colors.black45,
+                                child: const Icon(Icons.broken_image, color: Colors.redAccent),
                               ),
                             ),
                     ),
@@ -155,9 +142,11 @@ class _CarExpandedViewState extends State<CarExpandedView> {
                             begin: Alignment(lightX - 1, lightY - 1),
                             end: Alignment(lightX + 1, lightY + 1),
                             colors: [
-                              Colors.white.withOpacity(0.18),
+                              Colors.white.withOpacity(
+                                widget.style.contains('holografico') || widget.style.contains('holographic') ? 0.45 : 0.2
+                              ),
                               Colors.transparent,
-                              Colors.black.withOpacity(0.1),
+                              Colors.black.withOpacity(0.15),
                             ],
                           ),
                         ),
@@ -175,8 +164,8 @@ class _CarExpandedViewState extends State<CarExpandedView> {
                 style: GoogleFonts.ibmPlexMono(
                   fontSize: 14,
                   letterSpacing: 1.5,
-                  fontWeight: FontWeight.normal,
-                  color: isDark ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                  color: carTheme.textColor,
                 ),
               ),
             ),
@@ -186,6 +175,7 @@ class _CarExpandedViewState extends State<CarExpandedView> {
     );
   }
 
+// METODO DE EXIBICAO DO MODAL DE DETALHES, RESPONSAVEL POR MOSTRAR A DESCRICAO DO CARRO E UMA OPCAO PARA REMOVER O CARRO DA COLECAO, APLICANDO O ESTILO VISUAL DEFINIDO PELO TEMA
   void _showInfoModal(BuildContext context, bool isDark) {
     showModalBottomSheet(
       context: context,
@@ -248,6 +238,7 @@ class _CarExpandedViewState extends State<CarExpandedView> {
     );
   }
 
+// METODO DE CONFIRMACAO DE EXCLUSAO, RESPONSAVEL POR EXIBIR UM ALERTA DE CONFIRMACAO ANTES DE REMOVER O CARRO DA COLECAO, APLICANDO O ESTILO VISUAL DEFINIDO PELO TEMA
   void _confirmDelete(BuildContext context, bool isDark) {
     showDialog(
       context: context,
@@ -266,7 +257,6 @@ class _CarExpandedViewState extends State<CarExpandedView> {
             onPressed: () {
               context.read<CarsProvider>().deleteCar(widget.id);
               Navigator.pop(ctx);
-              Navigator.pop(context);
               Navigator.pop(context);
             },
             child: Text("REMOVER", style: GoogleFonts.ibmPlexMono(color: Colors.redAccent, fontWeight: FontWeight.bold)),
