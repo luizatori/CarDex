@@ -148,7 +148,7 @@ class AuthProvider extends ChangeNotifier {
           'user_id': 'ftn1tjEd5m9e9FKDb',
           'template_params': {
             'user_email': email,
-            'project_name': 'DEX DE CARROS',
+            'project_name': 'CarDex',
           },
         }),
       );
