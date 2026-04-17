@@ -24,6 +24,7 @@
 - /android;
 - /web;
 
+# CarDex
 ## Objetivo do Aplicativo
 
 Nosso aplicativo móvel tem como objetivo o entretenimento. Trata-se de uma aplicação onde os usuários podem colecionar carros vistos, funcionando como um álbum de figurinhas digital.
