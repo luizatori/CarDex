@@ -83,6 +83,28 @@ class _VaporwaveLogoState extends State<VaporwaveLogo> with SingleTickerProvider
               fit: BoxFit.contain,
             ),
 
+            // EFEITO CRT SCANLINE (O MESMO DA SPLASH)
+            IgnorePointer(
+              child: Container(
+                width: widget.size,
+                height: widget.size,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle, 
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: const Alignment(0, -0.98), 
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(isDark ? 0.25 : 0.1), 
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    tileMode: TileMode.repeated,
+                  ),
+                ),
+              ),
+            ),
+
             // CRT GLASS OVERLAY 
             IgnorePointer(
               child: Container(

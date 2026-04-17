@@ -13,6 +13,7 @@ import 'src/screens/home_screen.dart';
 import 'src/screens/profile_screen.dart';
 import 'src/screens/login_screen.dart'; 
 import 'src/screens/register_screen.dart';
+import 'src/screens/splash_screen.dart';
 
 // main so gerencia as rotas e providers e inicia o app
 void main() async {
@@ -53,7 +54,7 @@ class AppRoot extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Dex de carros",
+      title: "CarDex",
       themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
@@ -64,18 +65,20 @@ class AppRoot extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0E0E11),
       ),
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const HomeScreen();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+
+      // splash Screen definida como a tela inicial
+      home: const DominoSplashScreen(), 
       routes: {
-        '/home': (context) => const HomeScreen(),
+        '/home': (context) => StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const HomeScreen();
+            } else {
+              return const LoginScreen();
+            }
+          },
+        ),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/profile': (context) => const ProfileScreen(),
