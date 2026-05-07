@@ -14,7 +14,7 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Entrada:** Nome, e-mail, senha  
 **Saída:** Conta criada com sucesso  
 **Regra de Negócio Relacionada:** RN01
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
@@ -23,7 +23,7 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Prioridade:** Alta  
 **Entrada:** E-mail e senha  
 **Saída:** Acesso ao perfil do usuário  
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
@@ -32,14 +32,14 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Prioridade:** Alta  
 **Entrada:** Imagem capturada  
 **Saída:** Identificação se a imagem se trata de um veículo.
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
 ### RF04 – Censura Automática de Placas
 **Descrição:** O sistema deve censurar automaticamente placas de veículos detectadas na imagem.  
 **Prioridade:** Alta 
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
@@ -53,14 +53,14 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 ### RF06 – Personalização da Coleção
 **Descrição:** O usuário deve poder adicionar nome, descrição, e moldura ao card.
 **Prioridade:** Média  
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
 ### RF07 – Personalização de Perfil
 **Descrição:** O usuário deve poder personalizar seu perfil utilizando widgets.  
 **Prioridade:** Alta 
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ---
 
@@ -74,12 +74,12 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 ### RF09 - Metodo OTP 
 **Descrição:** O sistema deve emitir um código de 7 digitos no email a ser cadastrado para a confirmação.  
 **Prioridade:** Alta
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ### RF10 - Recuperação de senha
 **Descrição:** Caso um usuário logado perca sua senha, o sistema deve oferecer uma tentativa de recuperação enviada ao email cadastrado.  
 **Prioridade:** Alta
-- [ ] **Concluído**
+- [x] **Concluído**
 
 ## 3. Critérios de Aceitação
 
