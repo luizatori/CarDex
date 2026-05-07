@@ -13,7 +13,8 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Prioridade:** Alta  
 **Entrada:** Nome, e-mail, senha  
 **Saída:** Conta criada com sucesso  
-**Regra de Negócio Relacionada:** RN01  
+**Regra de Negócio Relacionada:** RN01
+- [ ] **Concluído**
 
 ---
 
@@ -22,6 +23,7 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Prioridade:** Alta  
 **Entrada:** E-mail e senha  
 **Saída:** Acesso ao perfil do usuário  
+- [ ] **Concluído**
 
 ---
 
@@ -30,42 +32,51 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 **Prioridade:** Alta  
 **Entrada:** Imagem capturada  
 **Saída:** Identificação se a imagem se trata de um veículo.
+- [ ] **Concluído**
 
 ---
 
 ### RF04 – Censura Automática de Placas
 **Descrição:** O sistema deve censurar automaticamente placas de veículos detectadas na imagem.  
-**Prioridade:** Alta  
+**Prioridade:** Alta 
+- [ ] **Concluído**
 
 ---
 
 ### RF05 – Sistema de Raridade
 **Descrição:** O sistema deve classificar o veículo em um nível de raridade definido pela IA.  
 **Prioridade:** Média  
+- [ ] **Concluído**
 
 ---
 
 ### RF06 – Personalização da Coleção
-**Descrição:** O usuário deve poder adicionar nome, descrição, personalizar card e adicionar stickers aos veículos colecionados.  
+**Descrição:** O usuário deve poder adicionar nome, descrição, e moldura ao card.
 **Prioridade:** Média  
+- [ ] **Concluído**
 
 ---
 
 ### RF07 – Personalização de Perfil
 **Descrição:** O usuário deve poder personalizar seu perfil utilizando widgets.  
-**Prioridade:** Baixa  
+**Prioridade:** Alta 
+- [ ] **Concluído**
 
 ---
 
 ### RF08 – Visualização de Perfis (Futuro)
 **Descrição:** O sistema deve permitir que usuários visualizem perfis de outros usuários.  
 **Prioridade:** Baixa  
-**Status:** Funcionalidade futura  
+- [ ] **Concluído**
 
 ---
 
-## 3. Critérios de Aceitação
+### RF08 - Metodo OTP 
+**Descrição:** O sistema deve emitir um código de 7 digitos no email a ser cadastrado para a confirmação.  
+**Prioridade:** Alta
+- [ ] **Concluído**
 
+## 3. Critérios de Aceitação
 
 Cada requisito deve:
 - Ser testável;
