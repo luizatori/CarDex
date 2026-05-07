@@ -71,8 +71,13 @@ Este documento descreve os Requisitos Funcionais do aplicativo de coleção de c
 
 ---
 
-### RF08 - Metodo OTP 
+### RF09 - Metodo OTP 
 **Descrição:** O sistema deve emitir um código de 7 digitos no email a ser cadastrado para a confirmação.  
+**Prioridade:** Alta
+- [ ] **Concluído**
+
+### RF10 - Recuperação de senha
+**Descrição:** Caso um usuário logado perca sua senha, o sistema deve oferecer uma tentativa de recuperação enviada ao email cadastrado.  
 **Prioridade:** Alta
 - [ ] **Concluído**
 
