@@ -1,6 +1,6 @@
-# Documento C: Técnicas e Casos de Teste — Projeto PI-S1-2026
+# Técnicas e Casos de Teste — CarDex
 
-**Projeto:** Auth 29119 App (PI-S1-2026)  
+**Projeto:** CarDex                
 **Tecnologia:** Flutter  
 **Arquitetura:** MVVM  
 **Norma Aplicada:** ISO/IEC/IEEE 29119-4
@@ -95,4 +95,4 @@ Para a derivação dos casos de teste deste projeto, foram aplicadas as seguinte
 ---
 
 ## 4. Conclusão
-Os casos de teste foram derivados utilizando técnicas formais da norma **ISO/IEC/IEEE 29119-4** e estão prontos para implementação automatizada no projeto Flutter (PI-S1-2026), garantindo a qualidade dos fluxos de autenticação.
+Os casos de teste foram derivados utilizando técnicas formais da norma **ISO/IEC/IEEE 29119-4** e estão prontos para implementação automatizada no projeto Flutter (CarDex), garantindo a qualidade dos fluxos de autenticação.
