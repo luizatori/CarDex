@@ -11,6 +11,7 @@
 - /lib/src – código;
 - /design – protótipos;
 - /assets - imagens utilizadas;
+- /test - teste de software;
 
 ### Arquivos obrigatórios na raiz da aplicação Flutter
 - /.gitignore;
