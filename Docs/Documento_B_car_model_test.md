@@ -1,5 +1,5 @@
 # Documento D — Execução e Resultados dos Testes
-**Projeto:** CarDex App  
+**Projeto:** CarDex  
 **Tecnologia:** Flutter  
 **Norma aplicada:** ISO/IEC/IEEE 29119  
 **Tipo de teste:** Unidade  
@@ -22,18 +22,18 @@ Registrar a execução dos testes implementados no arquivo `car_model_test.dart`
 
 ## 3. Estrutura dos Testes Executados
 
-```
+
 test/
   car_model_test.dart
-```
+
 
 ---
 
 ## 4. Execução dos Testes
 
-```bash
+
 flutter test test/car_model_test.dart
-```
+
 
 ---
 
@@ -43,22 +43,22 @@ flutter test test/car_model_test.dart
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC01 | CarItem.empty cria slot vazio | `isEmpty=true`, `name=""`, `style="default"`, `isFavorite=false`, `imageUrl=null` | Conforme esperado | ✅ Aprovado |
-| TC02 | isBase64 retorna false para URL curta | `isBase64=false` | Conforme esperado | ✅ Aprovado |
-| TC03 | isBase64 retorna true para string base64 longa | `isBase64=true` | Conforme esperado | ✅ Aprovado |
-| TC04 | isBase64 retorna false quando imageUrl é nulo | `isBase64=false` | Conforme esperado | ✅ Aprovado |
-| TC05 | toMap serializa os campos corretamente | `map` contém `name`, `style`, `isFavorite`, `imageUrl` | Conforme esperado | ✅ Aprovado |
-| TC06 | toMap não inclui o campo id | `map` não contém a chave `id` | Conforme esperado | ✅ Aprovado |
+| TC01 | CarItem.empty cria slot vazio | `isEmpty=true`, `name=""`, `style="default"`, `isFavorite=false`, `imageUrl=null` | Conforme esperado |  Aprovado |
+| TC02 | isBase64 retorna false para URL curta | `isBase64=false` | Conforme esperado |  Aprovado |
+| TC03 | isBase64 retorna true para string base64 longa | `isBase64=true` | Conforme esperado |  Aprovado |
+| TC04 | isBase64 retorna false quando imageUrl é nulo | `isBase64=false` | Conforme esperado |  Aprovado |
+| TC05 | toMap serializa os campos corretamente | `map` contém `name`, `style`, `isFavorite`, `imageUrl` | Conforme esperado |  Aprovado |
+| TC06 | toMap não inclui o campo id | `map` não contém a chave `id` | Conforme esperado |  Aprovado |
 
 ### Grupo: StyleOptions — Testes de unidade
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC07 | Primeiro estilo é default e não está bloqueado | `key="default"`, `locked=false`, `requiredCount=0` | Conforme esperado | ✅ Aprovado |
-| TC08 | Estilos bloqueados têm requiredCount maior que zero | `requiredCount > 0` para todos os bloqueados | Conforme esperado | ✅ Aprovado |
-| TC09 | Estilo neon exige 100 carros para desbloquear | `locked=true`, `requiredCount=100` | Conforme esperado | ✅ Aprovado |
-| TC10 | Estilos bloqueados têm mensagem de requisito | `requirement != null` e não vazio | Conforme esperado | ✅ Aprovado |
-| TC11 | ace-spades exige mais carros que neon | `ace.requiredCount > neon.requiredCount` (150 > 100) | Conforme esperado | ✅ Aprovado |
+| TC07 | Primeiro estilo é default e não está bloqueado | `key="default"`, `locked=false`, `requiredCount=0` | Conforme esperado |  Aprovado |
+| TC08 | Estilos bloqueados têm requiredCount maior que zero | `requiredCount > 0` para todos os bloqueados | Conforme esperado |  Aprovado |
+| TC09 | Estilo neon exige 100 carros para desbloquear | `locked=true`, `requiredCount=100` | Conforme esperado |  Aprovado |
+| TC10 | Estilos bloqueados têm mensagem de requisito | `requirement != null` e não vazio | Conforme esperado |  Aprovado |
+| TC11 | ace-spades exige mais carros que neon | `ace.requiredCount > neon.requiredCount` (150 > 100) | Conforme esperado |  Aprovado |
 
 ---
 
@@ -74,14 +74,14 @@ Foi realizada uma simulação de falha alterando propositalmente o valor esperad
 **Resultado da simulação**
 
 Esperado pelo teste:
-```
+
 requiredCount = 1
-```
+
 
 Resultado obtido:
-```
+
 requiredCount = 0
-```
+
 
 **Resultado do Teste: Reprovado**
 
