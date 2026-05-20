@@ -22,18 +22,18 @@ Registrar a execução dos testes implementados no arquivo `user_model_test.dart
 
 ## 3. Estrutura dos Testes Executados
 
-```
+
 test/
   user_model_test.dart
-```
+
 
 ---
 
 ## 4. Execução dos Testes
 
-```bash
+
 flutter test test/user_model_test.dart
-```
+
 
 ---
 
@@ -43,10 +43,10 @@ flutter test test/user_model_test.dart
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC01 | UserModel criado com valores padrão corretos | `points=0`, `capturedCars=[]` | Conforme esperado | ✅ Aprovado |
-| TC02 | UserModel criado com pontos e carros capturados | `points=150`, `capturedCars.length=3`, lista contém `'car_2'` | Conforme esperado | ✅ Aprovado |
-| TC03 | toMap serializa os campos corretamente | `map` contém `uid`, `email`, `username`, `points`, `capturedCars` | Conforme esperado | ✅ Aprovado |
-| TC04 | toMap de usuário novo tem lista de carros vazia | `capturedCars=[]`, `points=0` | Conforme esperado | ✅ Aprovado |
+| TC01 | UserModel criado com valores padrão corretos | `points=0`, `capturedCars=[]` | Conforme esperado |  Aprovado |
+| TC02 | UserModel criado com pontos e carros capturados | `points=150`, `capturedCars.length=3`, lista contém `'car_2'` | Conforme esperado |  Aprovado |
+| TC03 | toMap serializa os campos corretamente | `map` contém `uid`, `email`, `username`, `points`, `capturedCars` | Conforme esperado |  Aprovado |
+| TC04 | toMap de usuário novo tem lista de carros vazia | `capturedCars=[]`, `points=0` | Conforme esperado |  Aprovado |
 
 ---
 
@@ -62,14 +62,14 @@ Foi realizada uma simulação de falha alterando propositalmente o valor esperad
 **Resultado da simulação**
 
 Esperado pelo teste:
-```
+
 points = 10
-```
+
 
 Resultado obtido:
-```
+
 points = 0
-```
+
 
 **Resultado do Teste: Reprovado**
 
