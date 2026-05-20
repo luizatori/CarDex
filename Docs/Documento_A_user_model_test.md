@@ -1,5 +1,5 @@
 # Documento D — Execução e Resultados dos Testes
-**Projeto:** CarDex App  
+**Projeto:** CarDex  
 **Tecnologia:** Flutter  
 **Norma aplicada:** ISO/IEC/IEEE 29119  
 **Tipo de teste:** Unidade  
