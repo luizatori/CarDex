@@ -1,5 +1,5 @@
 # Documento D — Execução e Resultados dos Testes
-**Projeto:** CarDex App  
+**Projeto:** CarDex  
 **Tecnologia:** Flutter  
 **Norma aplicada:** ISO/IEC/IEEE 29119  
 **Tipo de teste:** Unidade  
@@ -22,18 +22,18 @@ Registrar a execução dos testes implementados no arquivo `car_skin_theme_test.
 
 ## 3. Estrutura dos Testes Executados
 
-```
+
 test/
   car_skin_theme_test.dart
-```
+
 
 ---
 
 ## 4. Execução dos Testes
 
-```bash
+
 flutter test test/car_skin_theme_test.dart
-```
+
 
 ---
 
@@ -43,20 +43,20 @@ flutter test test/car_skin_theme_test.dart
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC01 | Estilo default no modo escuro retorna cores escuras | `textColor=white`, `bgColor=#1A1A1A`, `borderWidth=1.0` | Conforme esperado | ✅ Aprovado |
-| TC02 | Estilo default no modo claro retorna cores claras | `textColor=black`, `bgColor=white` | Conforme esperado | ✅ Aprovado |
-| TC03 | Estilo gold retorna cor de texto marrom escuro | `textColor=#5C4033`, `bgColor=#D4AF37` | Conforme esperado | ✅ Aprovado |
-| TC04 | Estilo "ouro" é reconhecido como alias de gold | `bgColor` e `textColor` iguais ao gold | Conforme esperado | ✅ Aprovado |
-| TC05 | Estilo silver retorna cor de texto cinza escuro | `textColor=#454545`, `bgColor=#C0C0C0` | Conforme esperado | ✅ Aprovado |
-| TC06 | Estilo neon tem cor de borda verde neon | `borderColor=#39FF14`, `borderWidth=2.0` | Conforme esperado | ✅ Aprovado |
-| TC07 | Estilo crimson tem cor de texto vermelha | `textColor=#DC143C`, `bgColor=#1A0505` | Conforme esperado | ✅ Aprovado |
-| TC08 | Estilo "carmesim" é reconhecido como alias de crimson | `bgColor` e `textColor` iguais ao crimson | Conforme esperado | ✅ Aprovado |
-| TC09 | Estilo carbon tem fundo escuro e texto branco acinzentado | `textColor=white70`, `bgColor=#121212`, `borderWidth=2.0` | Conforme esperado | ✅ Aprovado |
-| TC10 | Estilo desconhecido retorna o tema padrão | `textColor=white`, `bgColor=#1A1A1A` (modo escuro) | Conforme esperado | ✅ Aprovado |
-| TC11 | Estilo ace-spades possui overlayTextures | `overlayTextures` não vazio, `textColor=white`, `bgColor=black` | Conforme esperado | ✅ Aprovado |
-| TC12 | Estilo nature tem borda verde e fundo claro | `borderColor=#66BB6A`, `bgColor=#E8F5E9`, `borderWidth=4.0` | Conforme esperado | ✅ Aprovado |
-| TC13 | getTheme é case-insensitive | `getTheme('GOLD')` == `getTheme('gold')` | Conforme esperado | ✅ Aprovado |
-| TC14 | Estilo vintage tem borderWidth maior que o padrão | `vintage.borderWidth > default.borderWidth` (8.0 > 1.0) | Conforme esperado | ✅ Aprovado |
+| TC01 | Estilo default no modo escuro retorna cores escuras | `textColor=white`, `bgColor=#1A1A1A`, `borderWidth=1.0` | Conforme esperado |  Aprovado |
+| TC02 | Estilo default no modo claro retorna cores claras | `textColor=black`, `bgColor=white` | Conforme esperado |  Aprovado |
+| TC03 | Estilo gold retorna cor de texto marrom escuro | `textColor=#5C4033`, `bgColor=#D4AF37` | Conforme esperado |  Aprovado |
+| TC04 | Estilo "ouro" é reconhecido como alias de gold | `bgColor` e `textColor` iguais ao gold | Conforme esperado |  Aprovado |
+| TC05 | Estilo silver retorna cor de texto cinza escuro | `textColor=#454545`, `bgColor=#C0C0C0` | Conforme esperado |  Aprovado |
+| TC06 | Estilo neon tem cor de borda verde neon | `borderColor=#39FF14`, `borderWidth=2.0` | Conforme esperado |  Aprovado |
+| TC07 | Estilo crimson tem cor de texto vermelha | `textColor=#DC143C`, `bgColor=#1A0505` | Conforme esperado |  Aprovado |
+| TC08 | Estilo "carmesim" é reconhecido como alias de crimson | `bgColor` e `textColor` iguais ao crimson | Conforme esperado |  Aprovado |
+| TC09 | Estilo carbon tem fundo escuro e texto branco acinzentado | `textColor=white70`, `bgColor=#121212`, `borderWidth=2.0` | Conforme esperado |  Aprovado |
+| TC10 | Estilo desconhecido retorna o tema padrão | `textColor=white`, `bgColor=#1A1A1A` (modo escuro) | Conforme esperado |  Aprovado |
+| TC11 | Estilo ace-spades possui overlayTextures | `overlayTextures` não vazio, `textColor=white`, `bgColor=black` | Conforme esperado |  Aprovado |
+| TC12 | Estilo nature tem borda verde e fundo claro | `borderColor=#66BB6A`, `bgColor=#E8F5E9`, `borderWidth=4.0` | Conforme esperado |  Aprovado |
+| TC13 | getTheme é case-insensitive | `getTheme('GOLD')` == `getTheme('gold')` | Conforme esperado |  Aprovado |
+| TC14 | Estilo vintage tem borderWidth maior que o padrão | `vintage.borderWidth > default.borderWidth` (8.0 > 1.0) | Conforme esperado |  Aprovado |
 
 ---
 
@@ -72,14 +72,14 @@ Foi realizada uma simulação de falha alterando propositalmente o valor esperad
 **Resultado da simulação**
 
 Esperado pelo teste:
-```
+
 borderColor = Color(0xFFFF0000)
-```
+
 
 Resultado obtido:
-```
+
 borderColor = Color(0xFF39FF14)
-```
+
 
 **Resultado do Teste: Reprovado**
 
