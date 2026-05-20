@@ -1,5 +1,5 @@
 # Documento D — Execução e Resultados dos Testes
-**Projeto:** CarDex App  
+**Projeto:** CarDex  
 **Tecnologia:** Flutter  
 **Norma aplicada:** ISO/IEC/IEEE 29119  
 **Tipo de teste:** Unidade  
@@ -22,18 +22,17 @@ Registrar a execução dos testes implementados no arquivo `auth_logic_test.dart
 
 ## 3. Estrutura dos Testes Executados
 
-```
+
 test/
   auth_logic_test.dart
-```
+
 
 ---
 
 ## 4. Execução dos Testes
 
-```bash
 flutter test test/auth_logic_test.dart
-```
+
 
 ---
 
@@ -43,29 +42,29 @@ flutter test test/auth_logic_test.dart
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC01 | Código gerado tem exatamente 7 caracteres | `code.length == 7` | Conforme esperado | ✅ Aprovado |
-| TC02 | Código contém apenas letras maiúsculas e dígitos | `RegExp(r'^[A-Z0-9]+$').hasMatch == true` | Conforme esperado | ✅ Aprovado |
-| TC03 | Dois códigos gerados em sequência são diferentes | `code1 != code2` | Conforme esperado | ✅ Aprovado |
-| TC04 | 50 códigos gerados sem caracteres inválidos | Nenhum código contém caractere fora de `[A-Z0-9]` | Conforme esperado | ✅ Aprovado |
-| TC05 | Código correto valida (case-insensitive) | `isValid = true` ao comparar código em minúsculas | Conforme esperado | ✅ Aprovado |
-| TC06 | Código incorreto não valida | `isValid = false` para código diferente | Conforme esperado | ✅ Aprovado |
+| TC01 | Código gerado tem exatamente 7 caracteres | `code.length == 7` | Conforme esperado |  Aprovado |
+| TC02 | Código contém apenas letras maiúsculas e dígitos | `RegExp(r'^[A-Z0-9]+$').hasMatch == true` | Conforme esperado |  Aprovado |
+| TC03 | Dois códigos gerados em sequência são diferentes | `code1 != code2` | Conforme esperado |  Aprovado |
+| TC04 | 50 códigos gerados sem caracteres inválidos | Nenhum código contém caractere fora de `[A-Z0-9]` | Conforme esperado |  Aprovado |
+| TC05 | Código correto valida (case-insensitive) | `isValid = true` ao comparar código em minúsculas | Conforme esperado |  Aprovado |
+| TC06 | Código incorreto não valida | `isValid = false` para código diferente | Conforme esperado |  Aprovado |
 
 ### Grupo: LoginScreen — validação de campos (lógica isolada)
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC07 | Campos preenchidos não retornam erro | `error = null` | Conforme esperado | ✅ Aprovado |
-| TC08 | Email vazio retorna mensagem de erro | `error = 'POR FAVOR, PREENCHA TODOS OS CAMPOS.'` | Conforme esperado | ✅ Aprovado |
-| TC09 | Senha vazia retorna mensagem de erro | `error = 'POR FAVOR, PREENCHA TODOS OS CAMPOS.'` | Conforme esperado | ✅ Aprovado |
-| TC10 | Ambos os campos vazios retornam mensagem de erro | `error != null` | Conforme esperado | ✅ Aprovado |
+| TC07 | Campos preenchidos não retornam erro | `error = null` | Conforme esperado |  Aprovado |
+| TC08 | Email vazio retorna mensagem de erro | `error = 'POR FAVOR, PREENCHA TODOS OS CAMPOS.'` | Conforme esperado |  Aprovado |
+| TC09 | Senha vazia retorna mensagem de erro | `error = 'POR FAVOR, PREENCHA TODOS OS CAMPOS.'` | Conforme esperado |  Aprovado |
+| TC10 | Ambos os campos vazios retornam mensagem de erro | `error != null` | Conforme esperado |  Aprovado |
 
 ### Grupo: RegisterScreen — validação de campos (lógica isolada)
 
 | Caso | Objetivo | Resultado Esperado | Resultado Obtido | Status |
 |------|----------|--------------------|------------------|--------|
-| TC11 | Todos os campos preenchidos não retornam erro | `error = null` | Conforme esperado | ✅ Aprovado |
-| TC12 | Username vazio retorna mensagem de erro | `error != null` | Conforme esperado | ✅ Aprovado |
-| TC13 | Qualquer campo vazio no cadastro retorna erro | `error != null` em todos os 3 casos testados | Conforme esperado | ✅ Aprovado |
+| TC11 | Todos os campos preenchidos não retornam erro | `error = null` | Conforme esperado |  Aprovado |
+| TC12 | Username vazio retorna mensagem de erro | `error != null` | Conforme esperado |  Aprovado |
+| TC13 | Qualquer campo vazio no cadastro retorna erro | `error != null` em todos os 3 casos testados | Conforme esperado |  Aprovado |
 
 ---
 
@@ -81,14 +80,14 @@ Foi realizada uma simulação de falha alterando propositalmente o valor esperad
 **Resultado da simulação**
 
 Esperado pelo teste:
-```
+
 code.length == 6
-```
+
 
 Resultado obtido:
-```
+
 code.length == 7
-```
+
 
 **Resultado do Teste: Reprovado**
 
