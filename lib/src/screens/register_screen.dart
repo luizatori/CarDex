@@ -95,39 +95,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: GoogleFonts.getFont(customFont,
                   fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 2),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "DIGITE O CÓDIGO DE 7 DÍGITOS ENVIADO PARA:\n$email",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.getFont(customFont,
-                      fontSize: 10, color: textColor.withOpacity(0.6)),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: codeController,
-                  maxLength: 7,
-                  textAlign: TextAlign.center,
-                  autofocus: true,
-                  style: GoogleFonts.getFont(customFont,
-                      fontSize: 22,
-                      letterSpacing: 4,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? const Color.fromARGB(255, 255, 255, 255) : Colors.black87),
-                  decoration: InputDecoration(
-                    counterText: "",
-                    hintText: "XXXXXXX",
-                    hintStyle: TextStyle(color: textColor.withOpacity(0.2)),
-                    filled: true,
-                    fillColor: textColor.withOpacity(0.05),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none),
-                  ),
-                ),
-              ],
-            ),
+           content: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Text(
+      "DIGITE O CÓDIGO DE 7 DÍGITOS ENVIADO PARA:\n$email",
+      textAlign: TextAlign.center,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 10,
+        color: textColor.withOpacity(0.6),
+      ),
+    ),
+
+    const SizedBox(height: 12),
+
+    Text(
+      "ATENÇÃO: HÁ POSSIBILIDADE DO E-MAIL CAIR NA CAIXA DE SPAM.",
+      textAlign: TextAlign.center,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 10,
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+
+    const SizedBox(height: 24),
+
+    TextField(
+      controller: codeController,
+      maxLength: 7,
+      textAlign: TextAlign.center,
+      autofocus: true,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 22,
+        letterSpacing: 4,
+        fontWeight: FontWeight.bold,
+        color: isDark
+            ? const Color.fromARGB(255, 255, 255, 255)
+            : Colors.black87,
+      ),
+      decoration: InputDecoration(
+        counterText: "",
+        hintText: "XXXXXXX",
+        hintStyle: TextStyle(
+          color: textColor.withOpacity(0.2),
+        ),
+        filled: true,
+        fillColor: textColor.withOpacity(0.05),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    ),
+  ],
+),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),

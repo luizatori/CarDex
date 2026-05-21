@@ -79,30 +79,57 @@ class _LoginScreenState extends State<LoginScreen> {
               style: GoogleFonts.getFont(customFont, 
                   fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "ENVIAREMOS UM LINK DE REDEFINIÇÃO VIA EMAILJS PARA O SEU E-MAIL.",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.getFont(customFont, 
-                      fontSize: 10, color: textColor.withOpacity(0.6)),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: resetController,
-                  style: GoogleFonts.getFont(customFont, fontSize: 13, color: textColor),
-                  decoration: InputDecoration(
-                    labelText: "E-MAIL CADASTRADO",
-                    labelStyle: TextStyle(fontSize: 10, color: textColor.withOpacity(0.5)),
-                    filled: true,
-                    fillColor: textColor.withOpacity(0.05),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                  ),
-                ),
-              ],
-            ),
+content: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Text(
+      "ENVIAREMOS UM LINK DE REDEFINIÇÃO VIA EMAILJS PARA O SEU E-MAIL.",
+      textAlign: TextAlign.center,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 10,
+        color: textColor.withOpacity(0.6),
+      ),
+    ),
+
+    const SizedBox(height: 12),
+
+    Text(
+      "ATENÇÃO: HÁ POSSIBILIDADE DO E-MAIL CAIR NA CAIXA DE SPAM.",
+      textAlign: TextAlign.center,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 10,
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+
+    const SizedBox(height: 20),
+
+    TextField(
+      controller: resetController,
+      style: GoogleFonts.getFont(
+        customFont,
+        fontSize: 13,
+        color: textColor,
+      ),
+      decoration: InputDecoration(
+        labelText: "E-MAIL CADASTRADO",
+        labelStyle: TextStyle(
+          fontSize: 10,
+          color: textColor.withOpacity(0.5),
+        ),
+        filled: true,
+        fillColor: textColor.withOpacity(0.05),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    ),
+  ],
+),
             actions: [
               Padding(
                 padding: const EdgeInsets.all(10),
