@@ -61,3 +61,6 @@ app.*.symbols
 app.*.map.json
 
 # Firebase chaves e configurações
+
+# Outros arquivos de configuração
+git rm --cached -r android/.kotlin
